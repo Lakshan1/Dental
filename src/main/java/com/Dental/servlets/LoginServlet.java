@@ -1,4 +1,4 @@
-package com.Dental;
+package com.Dental.servlets;
 
 import java.io.IOException;
 
