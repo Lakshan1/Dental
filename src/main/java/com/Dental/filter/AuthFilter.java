@@ -16,6 +16,7 @@ import jakarta.servlet.http.HttpSession;
 public class AuthFilter implements Filter {
     // This filter can be used to implement authentication and authorization logic
     // FilterChain allows the request to proceed to the next filter or servlet in the chain
+    @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest httpRequest = (HttpServletRequest) request; // Cast the ServletRequest to HttpServletRequest to access HTTP-specific methods
         HttpServletResponse httpResponse = (HttpServletResponse) response; // Cast the ServletResponse to HttpServletResponse to access HTTP-specific methods
