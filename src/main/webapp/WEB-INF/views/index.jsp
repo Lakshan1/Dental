@@ -5,7 +5,8 @@
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body>
-  <h2 class="text-red-500">Dental is running</h2>
-  <p><a href="hello">Go to /hello servlet</a></p>
+  <c:if test="${not empty sessionScope.user}">
+    Welcome, ${sessionScope.user.name}
+  </c:if>
 </body>
 </html>
