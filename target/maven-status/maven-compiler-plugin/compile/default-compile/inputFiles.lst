@@ -1,2 +1,6 @@
-/Users/admin/Desktop/Course/Advanced Programming/Dental/src/main/java/com/Dental/HelloServlet.java
-/Users/admin/Desktop/Course/Advanced Programming/Dental/src/main/java/com/Dental/LoginServlet.java
+/Users/admin/Desktop/Course/Advanced Programming/Dental/src/main/java/com/Dental/dao/UserDao.java
+/Users/admin/Desktop/Course/Advanced Programming/Dental/src/main/java/com/Dental/db/DBConnection.java
+/Users/admin/Desktop/Course/Advanced Programming/Dental/src/main/java/com/Dental/filter/AuthFilter.java
+/Users/admin/Desktop/Course/Advanced Programming/Dental/src/main/java/com/Dental/model/User.java
+/Users/admin/Desktop/Course/Advanced Programming/Dental/src/main/java/com/Dental/servlets/IndexServlet.java
+/Users/admin/Desktop/Course/Advanced Programming/Dental/src/main/java/com/Dental/servlets/LoginServlet.java
