@@ -49,19 +49,21 @@ public class LoginServlet extends HttpServlet {
         User user = userDao.getUserByEmail(email); // Retrieve the user from the database based on the provided email
 
         if (user != null) {
-
+            // check password againts stored passowrd using bcrypt
             if (!BCrypt.checkpw(password, user.getPasswordHash())) {
                 request.setAttribute("error", "Invalid password.");
                 request.getRequestDispatcher("login.jsp").forward(request, response);
                 return;
             }
+
             HttpSession session = request.getSession(); // Create a new session for the user
             session.setAttribute("user", user); // Store the user object in the session
 
+            // check remember is on or off
             if ("on".equals(remember)) {
-                session.setMaxInactiveInterval(7 * 24 * 60 * 60);
+                session.setMaxInactiveInterval(7 * 24 * 60 * 60); // set session end to 7 days
             }else {
-                session.setMaxInactiveInterval(5 * 60);
+                session.setMaxInactiveInterval(5 * 60); // set session end to 5 mins
             }
             response.sendRedirect("index"); // Redirect the user to the index page after successful login
 
