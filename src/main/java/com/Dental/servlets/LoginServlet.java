@@ -57,6 +57,12 @@ public class LoginServlet extends HttpServlet {
             }
             HttpSession session = request.getSession(); // Create a new session for the user
             session.setAttribute("user", user); // Store the user object in the session
+
+            if ("on".equals(remember)) {
+                session.setMaxInactiveInterval(7 * 24 * 60 * 60);
+            }else {
+                session.setMaxInactiveInterval(5 * 60);
+            }
             response.sendRedirect("index"); // Redirect the user to the index page after successful login
 
         } else {
