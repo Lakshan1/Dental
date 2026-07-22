@@ -4,6 +4,8 @@
      The links point to "#" for now; wire them to real pages later.
 ========================================================================= --%>
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <aside class="w-64 shrink-0 bg-white border-r border-gray-200 flex flex-col">
 
   <%-- ---- Brand / logo at the top of the sidebar ---- --%>
@@ -83,11 +85,28 @@
   <%-- ---- Logout pinned to the bottom ----
        Points to the /logout servlet (the one that clears session + cookie). --%>
   <div class="px-3 py-4 border-t border-gray-200">
-    <a href="logout" class="flex items-center gap-3 px-3 py-2 rounded-lg text-rose-600 hover:bg-rose-50">
+    <a onclick="logout()" class="flex items-center gap-3 px-3 py-2 rounded-lg text-rose-600 hover:bg-rose-50">
       <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A1.5 1.5 0 0 0 14.25 3.75h-7.5A1.5 1.5 0 0 0 5.25 5.25v13.5a1.5 1.5 0 0 0 1.5 1.5h7.5a1.5 1.5 0 0 0 1.5-1.5V15M18 12H9m9 0-2.25-2.25M18 12l-2.25 2.25"/>
       </svg>
       Logout
     </a>
   </div>
+
+  <script>
+    function logout() {
+      Swal.fire({
+        title: 'Are you sure you want to logout?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, logout'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          window.location.href = '${pageContext.request.contextPath}/logout';
+        }
+      });
+    }
+  </script>
 </aside>
