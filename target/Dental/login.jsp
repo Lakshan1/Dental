@@ -10,6 +10,8 @@
     <!-- tailwind cdn -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 
+   <link rel="icon" href="${pageContext.request.contextPath}/assets/favicon.ico" type="image/x-icon">
+
 </head>
 <body>
 
