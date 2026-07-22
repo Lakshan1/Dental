@@ -17,7 +17,8 @@
   ====================================================================== --%>
   <div class="flex h-screen overflow-hidden">
 
-    <%-- LEFT: the sidebar component --%>
+    <%-- LEFT: the sidebar component. Tell it which nav item is active. --%>
+    <c:set var="active" value="dashboard" />
     <%@ include file="/WEB-INF/views/partials/sidebar.jsp" %>
 
     <%-- RIGHT: a vertical column = top bar + scrolling content --%>

@@ -1,0 +1,216 @@
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Staff | Sunrise Dental</title>
+  <%@ include file="/WEB-INF/views/partials/head.jsp" %>
+</head>
+
+<body class="bg-gray-50 text-slate-700">
+
+  <%-- Same page shell as the dashboard: sidebar + (header + content) --%>
+  <div class="flex h-screen overflow-hidden">
+
+    <%-- LEFT: sidebar. Tell it which nav item is active. --%>
+    <c:set var="active" value="staff" />
+    <%@ include file="/WEB-INF/views/partials/sidebar.jsp" %>
+
+    <%-- RIGHT: top bar + scrolling content --%>
+    <div class="flex-1 flex flex-col overflow-hidden">
+
+      <%-- TOP: header (pass this page's title as props) --%>
+      <jsp:include page="/WEB-INF/views/partials/header.jsp">
+        <jsp:param name="pageTitle" value="Staff"/>
+        <jsp:param name="pageSubtitle" value="Manage your clinic's team"/>
+      </jsp:include>
+
+      <%-- MAIN: staff management content --%>
+      <main class="flex-1 overflow-y-auto p-6">
+
+        <%-- ---- Page heading + "Add Staff" button ---- --%>
+        <div class="flex items-center justify-between mb-6">
+          <div>
+            <h2 class="text-2xl font-bold text-slate-800">Staff</h2>
+            <p class="text-sm text-slate-400">All dentists and clinic staff.</p>
+          </div>
+
+          <%-- Opens your "add staff" form later. Visual only for now. --%>
+          <button class="flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-600 text-white text-sm font-medium hover:bg-blue-700">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+            Add Staff
+          </button>
+        </div>
+
+        <%-- ---- Small summary row ---- --%>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+          <div class="bg-white rounded-xl border border-gray-200 p-5">
+            <p class="text-sm text-slate-400">Total Staff</p>
+            <p class="text-2xl font-bold text-slate-800 mt-1">9</p>
+          </div>
+          <div class="bg-white rounded-xl border border-gray-200 p-5">
+            <p class="text-sm text-slate-400">Dentists</p>
+            <p class="text-2xl font-bold text-slate-800 mt-1">6</p>
+          </div>
+          <div class="bg-white rounded-xl border border-gray-200 p-5">
+            <p class="text-sm text-slate-400">On Duty Today</p>
+            <p class="text-2xl font-bold text-slate-800 mt-1">7</p>
+          </div>
+        </div>
+
+        <%-- ---- Staff table card ---- --%>
+        <div class="bg-white rounded-xl border border-gray-200">
+
+          <%-- Card header: title + a search box (visual only) --%>
+          <div class="flex items-center justify-between px-5 py-4 border-b border-gray-200">
+            <h3 class="font-semibold text-slate-800">All Staff</h3>
+            <div class="flex items-center gap-2 bg-gray-100 rounded-lg px-3 py-1.5">
+              <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="m21 21-4.35-4.35M17 10.5a6.5 6.5 0 1 1-13 0 6.5 6.5 0 0 1 13 0Z"/></svg>
+              <input type="text" placeholder="Search staff..." class="bg-transparent text-sm text-slate-600 outline-none w-44"/>
+            </div>
+          </div>
+
+          <%-- The table. Rows are static placeholder data - replace with a
+               <c:forEach items="${staffList}"> loop when you wire up the DB. --%>
+          <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+              <thead>
+                <tr class="text-left text-slate-400 border-b border-gray-100">
+                  <th class="px-5 py-3 font-medium">Name</th>
+                  <th class="px-5 py-3 font-medium">Role</th>
+                  <th class="px-5 py-3 font-medium">Specialization</th>
+                  <th class="px-5 py-3 font-medium">Phone</th>
+                  <th class="px-5 py-3 font-medium">Status</th>
+                  <th class="px-5 py-3 font-medium text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-100">
+
+                <%-- Row 1 --%>
+                <tr class="hover:bg-gray-50">
+                  <td class="px-5 py-3">
+                    <div class="flex items-center gap-3">
+                      <div class="h-9 w-9 rounded-full bg-blue-600 text-white flex items-center justify-center font-semibold">S</div>
+                      <div>
+                        <p class="font-medium text-slate-700">Dr. Silva</p>
+                        <p class="text-xs text-slate-400">silva@sunrisedental.lk</p>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="px-5 py-3 text-slate-500">Dentist</td>
+                  <td class="px-5 py-3 text-slate-500">Orthodontics</td>
+                  <td class="px-5 py-3 text-slate-500">077 123 4567</td>
+                  <td class="px-5 py-3"><span class="px-2 py-1 rounded-full text-xs bg-green-50 text-green-600">Active</span></td>
+                  <td class="px-5 py-3">
+                    <div class="flex items-center justify-end gap-2">
+                      <%-- Edit --%>
+                      <button class="p-1.5 rounded-lg text-slate-400 hover:bg-gray-100 hover:text-blue-600">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 3.75 20.25 7.5 8 19.75l-4 1 1-4L16.5 3.75Z"/></svg>
+                      </button>
+                      <%-- Delete --%>
+                      <button class="p-1.5 rounded-lg text-slate-400 hover:bg-rose-50 hover:text-rose-600">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 7.5h12M9.5 7.5V6a1.5 1.5 0 0 1 1.5-1.5h2A1.5 1.5 0 0 1 14.5 6v1.5M7 7.5l.7 11a1.5 1.5 0 0 0 1.5 1.4h5.6a1.5 1.5 0 0 0 1.5-1.4l.7-11"/></svg>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+
+                <%-- Row 2 --%>
+                <tr class="hover:bg-gray-50">
+                  <td class="px-5 py-3">
+                    <div class="flex items-center gap-3">
+                      <div class="h-9 w-9 rounded-full bg-emerald-600 text-white flex items-center justify-center font-semibold">J</div>
+                      <div>
+                        <p class="font-medium text-slate-700">Dr. Jayasuriya</p>
+                        <p class="text-xs text-slate-400">jaya@sunrisedental.lk</p>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="px-5 py-3 text-slate-500">Dentist</td>
+                  <td class="px-5 py-3 text-slate-500">Endodontics</td>
+                  <td class="px-5 py-3 text-slate-500">071 987 6543</td>
+                  <td class="px-5 py-3"><span class="px-2 py-1 rounded-full text-xs bg-green-50 text-green-600">Active</span></td>
+                  <td class="px-5 py-3">
+                    <div class="flex items-center justify-end gap-2">
+                      <button class="p-1.5 rounded-lg text-slate-400 hover:bg-gray-100 hover:text-blue-600">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 3.75 20.25 7.5 8 19.75l-4 1 1-4L16.5 3.75Z"/></svg>
+                      </button>
+                      <button class="p-1.5 rounded-lg text-slate-400 hover:bg-rose-50 hover:text-rose-600">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 7.5h12M9.5 7.5V6a1.5 1.5 0 0 1 1.5-1.5h2A1.5 1.5 0 0 1 14.5 6v1.5M7 7.5l.7 11a1.5 1.5 0 0 0 1.5 1.4h5.6a1.5 1.5 0 0 0 1.5-1.4l.7-11"/></svg>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+
+                <%-- Row 3 --%>
+                <tr class="hover:bg-gray-50">
+                  <td class="px-5 py-3">
+                    <div class="flex items-center gap-3">
+                      <div class="h-9 w-9 rounded-full bg-violet-600 text-white flex items-center justify-center font-semibold">M</div>
+                      <div>
+                        <p class="font-medium text-slate-700">Dr. Mendis</p>
+                        <p class="text-xs text-slate-400">mendis@sunrisedental.lk</p>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="px-5 py-3 text-slate-500">Dentist</td>
+                  <td class="px-5 py-3 text-slate-500">Cosmetic</td>
+                  <td class="px-5 py-3 text-slate-500">076 555 2020</td>
+                  <td class="px-5 py-3"><span class="px-2 py-1 rounded-full text-xs bg-amber-50 text-amber-600">On Leave</span></td>
+                  <td class="px-5 py-3">
+                    <div class="flex items-center justify-end gap-2">
+                      <button class="p-1.5 rounded-lg text-slate-400 hover:bg-gray-100 hover:text-blue-600">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 3.75 20.25 7.5 8 19.75l-4 1 1-4L16.5 3.75Z"/></svg>
+                      </button>
+                      <button class="p-1.5 rounded-lg text-slate-400 hover:bg-rose-50 hover:text-rose-600">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 7.5h12M9.5 7.5V6a1.5 1.5 0 0 1 1.5-1.5h2A1.5 1.5 0 0 1 14.5 6v1.5M7 7.5l.7 11a1.5 1.5 0 0 0 1.5 1.4h5.6a1.5 1.5 0 0 0 1.5-1.4l.7-11"/></svg>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+
+                <%-- Row 4 --%>
+                <tr class="hover:bg-gray-50">
+                  <td class="px-5 py-3">
+                    <div class="flex items-center gap-3">
+                      <div class="h-9 w-9 rounded-full bg-rose-500 text-white flex items-center justify-center font-semibold">P</div>
+                      <div>
+                        <p class="font-medium text-slate-700">Priya Nanayakkara</p>
+                        <p class="text-xs text-slate-400">priya@sunrisedental.lk</p>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="px-5 py-3 text-slate-500">Receptionist</td>
+                  <td class="px-5 py-3 text-slate-500">-</td>
+                  <td class="px-5 py-3 text-slate-500">070 444 1188</td>
+                  <td class="px-5 py-3"><span class="px-2 py-1 rounded-full text-xs bg-green-50 text-green-600">Active</span></td>
+                  <td class="px-5 py-3">
+                    <div class="flex items-center justify-end gap-2">
+                      <button class="p-1.5 rounded-lg text-slate-400 hover:bg-gray-100 hover:text-blue-600">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 3.75 20.25 7.5 8 19.75l-4 1 1-4L16.5 3.75Z"/></svg>
+                      </button>
+                      <button class="p-1.5 rounded-lg text-slate-400 hover:bg-rose-50 hover:text-rose-600">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 7.5h12M9.5 7.5V6a1.5 1.5 0 0 1 1.5-1.5h2A1.5 1.5 0 0 1 14.5 6v1.5M7 7.5l.7 11a1.5 1.5 0 0 0 1.5 1.4h5.6a1.5 1.5 0 0 0 1.5-1.4l.7-11"/></svg>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+
+              </tbody>
+            </table>
+          </div>
+
+          <%-- Simple footer / pagination hint (visual only) --%>
+          <div class="flex items-center justify-between px-5 py-3 border-t border-gray-200 text-sm text-slate-400">
+            <span>Showing 4 of 9 staff</span>
+            <div class="flex gap-1">
+              <button class="px-3 py-1 rounded-lg border border-gray-200 hover:bg-gray-50">Prev</button>
+              <button class="px-3 py-1 rounded-lg border border-gray-200 hover:bg-gray-50">Next</button>
+            </div>
+          </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+</body>
+</html>
