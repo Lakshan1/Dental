@@ -74,6 +74,36 @@ public class StaffDao {
         return null;
     }
 
+    public List<User> searchStaffs(String searchQuery) {
+        String sql = "SELECT * FROM users WHERE role = 'admin' AND (name LIKE ? OR email LIKE ?)";
+
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            String searchPattern = "%" + searchQuery + "%";
+            statement.setString(1, searchPattern);
+            statement.setString(2, searchPattern);
+            var resultSet = statement.executeQuery();
+
+            List<User> staffs = new ArrayList<>();
+
+            while (resultSet.next()) {
+                staffs.add(new User(
+                    resultSet.getInt("id"),
+                    resultSet.getString("name"),
+                    resultSet.getString("email"),
+                    resultSet.getString("passwordHash"),
+                    resultSet.getString("role"),
+                    resultSet.getString("status")
+                ));
+            }
+            return staffs;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
     public int getTotalActiveStaffCount() {
         String sql = "SELECT COUNT(*) AS total FROM users WHERE role = 'admin' AND status = 'active'";
 

@@ -20,8 +20,20 @@ public class StaffsServlet extends HttpServlet {
         int page = request.getParameter("page") != null ? Integer.parseInt(request.getParameter("page")) : 1;
         int recordsPerPage = 3; // Number of records to display per page
 
+        String searchQuery = request.getParameter("search");
+
+
         StaffDao staffDao = new StaffDao(); // Create an instance of StaffDao to interact with the database
-        List<User> staffs = staffDao.getAllStaffs(page, recordsPerPage); // Retrieve staff members from the database with pagination
+
+        List<User> staffs;
+
+        if (searchQuery != null && !searchQuery.trim().isEmpty()) {
+            staffs = staffDao.searchStaffs(searchQuery);
+            request.setAttribute("setFocusOnSearch", true); // Set the search query as a request attribute
+        } else {
+            staffs = staffDao.getAllStaffs(page, recordsPerPage);
+        }
+
         request.setAttribute("staffs", staffs); // Set the staffs as a request attribute
 
         request.setAttribute("totalActiveStaffCount", staffDao.getTotalActiveStaffCount()); // Set the total active staff count as a request attribute

@@ -65,7 +65,7 @@
             <h3 class="font-semibold text-slate-800">All Staff</h3>
             <div class="flex items-center gap-2 bg-gray-100 rounded-lg px-3 py-1.5">
               <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="m21 21-4.35-4.35M17 10.5a6.5 6.5 0 1 1-13 0 6.5 6.5 0 0 1 13 0Z"/></svg>
-              <input type="text" placeholder="Search staff..." class="bg-transparent text-sm text-slate-600 outline-none w-44"/>
+              <input type="text" placeholder="Search staff..." class="bg-transparent text-sm text-slate-600 outline-none w-44" onkeyup="searchStaff(event)"/>
             </div>
           </div>
 
@@ -129,5 +129,37 @@
       </main>
     </div>
   </div>
+
+  <script>
+    function searchStaff(event) {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        performSearch(event);
+      }
+    }
+
+    function performSearch(event) {
+      const query = event.target.value.toLowerCase();
+      
+      // set search value as url parameter and reload page
+      const url = new URL(window.location.href);
+      url.searchParams.set('search', query);
+      window.location.href = url.toString();
+    }
+
+    window.onload = function() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const searchQuery = urlParams.get('search');
+
+      const setFocusOnSearch = "${setFocusOnSearch}";
+      if (searchQuery) {
+        document.querySelector('input[placeholder="Search staff..."]').value = searchQuery;
+
+        if (setFocusOnSearch) {
+          document.querySelector('input[placeholder="Search staff..."]').focus();
+        }
+      }
+    }
+  </script>
 </body>
 </html>
