@@ -132,9 +132,16 @@
 
   <script>
     function searchStaff(event) {
-      if (event.key === "Enter") {
-        event.preventDefault();
-        performSearch(event);
+      if (event.target.value.trim() === "") {
+        // If the search box is empty, remove the search parameter from the URL and reload the page
+        const url = new URL(window.location.href);
+        url.searchParams.delete('search');
+        window.location.href = url.toString();
+      } else {
+        if (event.key === "Enter") {
+          event.preventDefault();
+          performSearch(event);
+        }
       }
     }
 

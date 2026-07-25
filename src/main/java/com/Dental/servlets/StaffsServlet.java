@@ -17,7 +17,15 @@ public class StaffsServlet extends HttpServlet {
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        int page = request.getParameter("page") != null ? Integer.parseInt(request.getParameter("page")) : 1;
+        int page = 1;
+
+        // Retrieve the page number from the request parameter and handle any potential exceptions
+        try {
+            String p = request.getParameter("page"); if (p != null) page = Math.max(1, Integer.parseInt(p)); 
+        } catch (Exception e) {
+            page = 1;
+        }
+
         int recordsPerPage = 3; // Number of records to display per page
 
         String searchQuery = request.getParameter("search");
