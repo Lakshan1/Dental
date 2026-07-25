@@ -1,6 +1,10 @@
 package com.Dental.servlets;
 
 import java.io.IOException;
+import java.util.List;
+
+import com.Dental.dao.StaffDao;
+import com.Dental.model.User;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -13,6 +17,14 @@ public class StaffsServlet extends HttpServlet {
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+        StaffDao staffDao = new StaffDao(); // Create an instance of StaffDao to interact with the database
+        List<User> staffs = staffDao.getAllStaffs(); // Retrieve all staff members from the database
+        request.setAttribute("staffs", staffs); // Set the staffs as a request attribute
+
+        request.setAttribute("totalActiveStaffCount", staffDao.getTotalActiveStaffCount()); // Set the total active staff count as a request attribute
+        request.setAttribute("totalStaffCount", staffDao.getTotalStaffCount()); // Set the total staff count as a request attribute
+        request.setAttribute("totalOnLeaveStaffCount", staffDao.getTotalOnLeaveStaffCount()); // Set the total on-leave staff count as a request attribute
         request.getRequestDispatcher("WEB-INF/views/staffs.jsp").forward(request, response);
     }
 }

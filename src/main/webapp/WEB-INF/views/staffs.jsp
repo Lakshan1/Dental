@@ -45,15 +45,15 @@
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
           <div class="bg-white rounded-xl border border-gray-200 p-5">
             <p class="text-sm text-slate-400">Total Staff</p>
-            <p class="text-2xl font-bold text-slate-800 mt-1">9</p>
+            <p class="text-2xl font-bold text-slate-800 mt-1">${totalStaffCount}</p>
           </div>
           <div class="bg-white rounded-xl border border-gray-200 p-5">
-            <p class="text-sm text-slate-400">Dentists</p>
-            <p class="text-2xl font-bold text-slate-800 mt-1">6</p>
+            <p class="text-sm text-slate-400">On Leave Today</p>
+            <p class="text-2xl font-bold text-slate-800 mt-1">${totalOnLeaveStaffCount}</p>
           </div>
           <div class="bg-white rounded-xl border border-gray-200 p-5">
             <p class="text-sm text-slate-400">On Duty Today</p>
-            <p class="text-2xl font-bold text-slate-800 mt-1">7</p>
+            <p class="text-2xl font-bold text-slate-800 mt-1">${totalActiveStaffCount}</p>
           </div>
         </div>
 
@@ -77,123 +77,40 @@
                 <tr class="text-left text-slate-400 border-b border-gray-100">
                   <th class="px-5 py-3 font-medium">Name</th>
                   <th class="px-5 py-3 font-medium">Role</th>
-                  <th class="px-5 py-3 font-medium">Specialization</th>
-                  <th class="px-5 py-3 font-medium">Phone</th>
                   <th class="px-5 py-3 font-medium">Status</th>
                   <th class="px-5 py-3 font-medium text-right">Actions</th>
                 </tr>
               </thead>
               <tbody class="divide-y divide-gray-100">
 
-                <%-- Row 1 --%>
-                <tr class="hover:bg-gray-50">
-                  <td class="px-5 py-3">
-                    <div class="flex items-center gap-3">
-                      <div class="h-9 w-9 rounded-full bg-blue-600 text-white flex items-center justify-center font-semibold">S</div>
-                      <div>
-                        <p class="font-medium text-slate-700">Dr. Silva</p>
-                        <p class="text-xs text-slate-400">silva@sunrisedental.lk</p>
+                <!-- loop through staffList -->
+                <c:forEach var="staff" items="${staffs}">
+                  <tr class="hover:bg-gray-50">
+                    <td class="px-5 py-3">
+                      <div class="flex items-center gap-3">
+                        <div class="h-9 w-9 rounded-full bg-blue-600 text-white flex items-center justify-center font-semibold">${staff.name.substring(0, 1)}</div>
+                        <div>
+                          <p class="font-medium text-slate-700">${staff.name}</p>
+                          <p class="text-xs text-slate-400">${staff.email}</p>
+                        </div>
                       </div>
-                    </div>
-                  </td>
-                  <td class="px-5 py-3 text-slate-500">Dentist</td>
-                  <td class="px-5 py-3 text-slate-500">Orthodontics</td>
-                  <td class="px-5 py-3 text-slate-500">077 123 4567</td>
-                  <td class="px-5 py-3"><span class="px-2 py-1 rounded-full text-xs bg-green-50 text-green-600">Active</span></td>
-                  <td class="px-5 py-3">
-                    <div class="flex items-center justify-end gap-2">
-                      <%-- Edit --%>
-                      <button class="p-1.5 rounded-lg text-slate-400 hover:bg-gray-100 hover:text-blue-600">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 3.75 20.25 7.5 8 19.75l-4 1 1-4L16.5 3.75Z"/></svg>
-                      </button>
-                      <%-- Delete --%>
-                      <button class="p-1.5 rounded-lg text-slate-400 hover:bg-rose-50 hover:text-rose-600">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 7.5h12M9.5 7.5V6a1.5 1.5 0 0 1 1.5-1.5h2A1.5 1.5 0 0 1 14.5 6v1.5M7 7.5l.7 11a1.5 1.5 0 0 0 1.5 1.4h5.6a1.5 1.5 0 0 0 1.5-1.4l.7-11"/></svg>
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-
-                <%-- Row 2 --%>
-                <tr class="hover:bg-gray-50">
-                  <td class="px-5 py-3">
-                    <div class="flex items-center gap-3">
-                      <div class="h-9 w-9 rounded-full bg-emerald-600 text-white flex items-center justify-center font-semibold">J</div>
-                      <div>
-                        <p class="font-medium text-slate-700">Dr. Jayasuriya</p>
-                        <p class="text-xs text-slate-400">jaya@sunrisedental.lk</p>
+                    </td>
+                    <td class="px-5 py-3 text-slate-500 capitalize">${staff.role}</td>
+                    <td class="px-5 py-3"><span class="px-2 py-1 rounded-full ${staff.status == 'active' ? 'bg-green-50 text-green-600' : staff.status == 'restricted' ? 'bg-red-50 text-red-600' : 'bg-yellow-50 text-yellow-600'}">${staff.status}</span></td>
+                    <td class="px-5 py-3">
+                      <div class="flex items-center justify-end gap-2">
+                        <%-- Edit --%>
+                        <button class="p-1.5 rounded-lg text-slate-400 hover:bg-gray-100 hover:text-blue-600">
+                          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 3.75 20.25 7.5 8 19.75l-4 1 1-4L16.5 3.75Z"/></svg>
+                        </button>
+                        <%-- Delete --%>
+                        <button class="p-1.5 rounded-lg text-slate-400 hover:bg-rose-50 hover:text-rose-600">
+                          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 7.5h12M9.5 7.5V6a1.5 1.5 0 0 1 1.5-1.5h2A1.5 1.5 0 0 1 14.5 6v1.5M7 7.5l.7 11a1.5 1.5 0 0 0 1.5 1.4h5.6a1.5 1.5 0 0 0 1.5-1.4l.7-11"/></svg>
+                        </button>
                       </div>
-                    </div>
-                  </td>
-                  <td class="px-5 py-3 text-slate-500">Dentist</td>
-                  <td class="px-5 py-3 text-slate-500">Endodontics</td>
-                  <td class="px-5 py-3 text-slate-500">071 987 6543</td>
-                  <td class="px-5 py-3"><span class="px-2 py-1 rounded-full text-xs bg-green-50 text-green-600">Active</span></td>
-                  <td class="px-5 py-3">
-                    <div class="flex items-center justify-end gap-2">
-                      <button class="p-1.5 rounded-lg text-slate-400 hover:bg-gray-100 hover:text-blue-600">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 3.75 20.25 7.5 8 19.75l-4 1 1-4L16.5 3.75Z"/></svg>
-                      </button>
-                      <button class="p-1.5 rounded-lg text-slate-400 hover:bg-rose-50 hover:text-rose-600">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 7.5h12M9.5 7.5V6a1.5 1.5 0 0 1 1.5-1.5h2A1.5 1.5 0 0 1 14.5 6v1.5M7 7.5l.7 11a1.5 1.5 0 0 0 1.5 1.4h5.6a1.5 1.5 0 0 0 1.5-1.4l.7-11"/></svg>
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-
-                <%-- Row 3 --%>
-                <tr class="hover:bg-gray-50">
-                  <td class="px-5 py-3">
-                    <div class="flex items-center gap-3">
-                      <div class="h-9 w-9 rounded-full bg-violet-600 text-white flex items-center justify-center font-semibold">M</div>
-                      <div>
-                        <p class="font-medium text-slate-700">Dr. Mendis</p>
-                        <p class="text-xs text-slate-400">mendis@sunrisedental.lk</p>
-                      </div>
-                    </div>
-                  </td>
-                  <td class="px-5 py-3 text-slate-500">Dentist</td>
-                  <td class="px-5 py-3 text-slate-500">Cosmetic</td>
-                  <td class="px-5 py-3 text-slate-500">076 555 2020</td>
-                  <td class="px-5 py-3"><span class="px-2 py-1 rounded-full text-xs bg-amber-50 text-amber-600">On Leave</span></td>
-                  <td class="px-5 py-3">
-                    <div class="flex items-center justify-end gap-2">
-                      <button class="p-1.5 rounded-lg text-slate-400 hover:bg-gray-100 hover:text-blue-600">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 3.75 20.25 7.5 8 19.75l-4 1 1-4L16.5 3.75Z"/></svg>
-                      </button>
-                      <button class="p-1.5 rounded-lg text-slate-400 hover:bg-rose-50 hover:text-rose-600">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 7.5h12M9.5 7.5V6a1.5 1.5 0 0 1 1.5-1.5h2A1.5 1.5 0 0 1 14.5 6v1.5M7 7.5l.7 11a1.5 1.5 0 0 0 1.5 1.4h5.6a1.5 1.5 0 0 0 1.5-1.4l.7-11"/></svg>
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-
-                <%-- Row 4 --%>
-                <tr class="hover:bg-gray-50">
-                  <td class="px-5 py-3">
-                    <div class="flex items-center gap-3">
-                      <div class="h-9 w-9 rounded-full bg-rose-500 text-white flex items-center justify-center font-semibold">P</div>
-                      <div>
-                        <p class="font-medium text-slate-700">Priya Nanayakkara</p>
-                        <p class="text-xs text-slate-400">priya@sunrisedental.lk</p>
-                      </div>
-                    </div>
-                  </td>
-                  <td class="px-5 py-3 text-slate-500">Receptionist</td>
-                  <td class="px-5 py-3 text-slate-500">-</td>
-                  <td class="px-5 py-3 text-slate-500">070 444 1188</td>
-                  <td class="px-5 py-3"><span class="px-2 py-1 rounded-full text-xs bg-green-50 text-green-600">Active</span></td>
-                  <td class="px-5 py-3">
-                    <div class="flex items-center justify-end gap-2">
-                      <button class="p-1.5 rounded-lg text-slate-400 hover:bg-gray-100 hover:text-blue-600">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 3.75 20.25 7.5 8 19.75l-4 1 1-4L16.5 3.75Z"/></svg>
-                      </button>
-                      <button class="p-1.5 rounded-lg text-slate-400 hover:bg-rose-50 hover:text-rose-600">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 7.5h12M9.5 7.5V6a1.5 1.5 0 0 1 1.5-1.5h2A1.5 1.5 0 0 1 14.5 6v1.5M7 7.5l.7 11a1.5 1.5 0 0 0 1.5 1.4h5.6a1.5 1.5 0 0 0 1.5-1.4l.7-11"/></svg>
-                      </button>
-                    </div>
-                  </td>
-                </tr>
+                    </td>
+                  </tr>
+                </c:forEach>
 
               </tbody>
             </table>

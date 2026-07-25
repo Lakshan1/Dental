@@ -6,14 +6,16 @@ public class User {
     String email;
     String passwordHash;
     String role;
+    String status;
 
     // Constructor to initialize a User object
-    public User(int id, String name, String email, String passwordHash, String role) {
+    public User(int id, String name, String email, String passwordHash, String role, String status) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.passwordHash = passwordHash;
         this.role = role;
+        this.status = status;
     }
 
     // Getters and setters for the User class fields
@@ -55,5 +57,13 @@ public class User {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }
