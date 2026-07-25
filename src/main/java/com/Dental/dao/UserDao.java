@@ -26,7 +26,8 @@ public class UserDao {
                     resultSet.getString("name"),
                     resultSet.getString("email"),
                     resultSet.getString("passwordHash"),
-                    resultSet.getString("role")
+                    resultSet.getString("role"),
+                    resultSet.getString("status")
                 );
                 return user;
             } 

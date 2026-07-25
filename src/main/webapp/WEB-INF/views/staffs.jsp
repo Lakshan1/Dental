@@ -118,10 +118,10 @@
 
           <%-- Simple footer / pagination hint (visual only) --%>
           <div class="flex items-center justify-between px-5 py-3 border-t border-gray-200 text-sm text-slate-400">
-            <span>Showing 4 of 9 staff</span>
+            <span>Showing ${staffs.size()} of ${totalStaffCount} staff</span>
             <div class="flex gap-1">
-              <button class="px-3 py-1 rounded-lg border border-gray-200 hover:bg-gray-50">Prev</button>
-              <button class="px-3 py-1 rounded-lg border border-gray-200 hover:bg-gray-50">Next</button>
+              <a href="?page=${page - 1}" class="px-3 py-1 rounded-lg border border-gray-200 hover:bg-gray-50">Prev</a>
+              <a href="?page=${page + 1}" class="px-3 py-1 rounded-lg border border-gray-200 hover:bg-gray-50">Next</a>
             </div>
           </div>
         </div>

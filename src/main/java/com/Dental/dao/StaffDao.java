@@ -1,6 +1,7 @@
 package com.Dental.dao;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +22,38 @@ public class StaffDao {
             // Create an array to hold the User objects
             List<User> staffs = new ArrayList<>(); // Using ArrayList for dynamic sizing
             int index = 0;
+
+            while (resultSet.next()) {
+                // Create and add a User object to the array based on the retrieved data
+                staffs.add(new User(
+                    resultSet.getInt("id"),
+                    resultSet.getString("name"),
+                    resultSet.getString("email"),
+                    resultSet.getString("passwordHash"),
+                    resultSet.getString("role"),
+                    resultSet.getString("status")
+                ));
+            }
+            return staffs; // Return the array of staff members
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    // Method to retrieve all the staffs with pagination
+    public List<User> getAllStaffs(int page, int recordsPerPage) {
+        String sql = "SELECT * FROM users WHERE role = 'admin' LIMIT ? OFFSET ?";
+
+        try (Connection connection = DBConnection.getConnection();
+    PreparedStatement statement = connection.prepareStatement(sql)){
+            statement.setInt(1, recordsPerPage);
+            statement.setInt(2, (page - 1) * recordsPerPage);
+            var resultSet = statement.executeQuery();
+
+            // Create an array to hold the User objects
+            List<User> staffs = new ArrayList<>(); // Using ArrayList for dynamic sizing
 
             while (resultSet.next()) {
                 // Create and add a User object to the array based on the retrieved data
