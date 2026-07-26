@@ -154,4 +154,40 @@ public class StaffDao {
 
         return 0;
     }
+
+    public boolean checkIfEmailExists(String email) {
+        String sql = "SELECT COUNT(*) AS total FROM users WHERE email = ?";
+
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, email);
+            var resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                return resultSet.getInt("total") > 0;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    public boolean addStaff(User user) {
+        // List the columns explicitly so the auto-increment "id" is skipped.
+        String sql = "INSERT INTO users (name, email, passwordHash, role, status) VALUES (?, ?, ?, ?, ?)";
+
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, user.getName());
+            statement.setString(2, user.getEmail());
+            statement.setString(3, user.getPasswordHash());
+            statement.setString(4, user.getRole());
+            statement.setString(5, user.getStatus());
+            return statement.executeUpdate() > 0;   // run it; true if a row was inserted
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }
