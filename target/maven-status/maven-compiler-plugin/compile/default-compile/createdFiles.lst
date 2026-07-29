@@ -1,5 +1,6 @@
 com/Dental/model/User.class
 com/Dental/filter/AuthFilter.class
+com/Dental/servlets/EditStaddServlet.class
 com/Dental/servlets/LogoutServlet.class
 com/Dental/servlets/IndexServlet.class
 com/Dental/servlets/LoginServlet.class

@@ -190,4 +190,47 @@ public class StaffDao {
             return false;
         }
     }
+
+    public boolean updateStaff(User user) {
+        String sql = "UPDATE users SET name = ?, email = ?, passwordHash = ?, role = ?, status = ? WHERE id = ?";
+
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, user.getName());
+            statement.setString(2, user.getEmail());
+            statement.setString(3, user.getPasswordHash());
+            statement.setString(4, user.getRole());
+            statement.setString(5, user.getStatus());
+            statement.setInt(6, user.getId());
+            return statement.executeUpdate() > 0;   // run it; true if a row was updated
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public User getStaffById(int id) {
+        String sql = "SELECT * FROM users WHERE id = ? AND role = 'admin'";
+
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, id);
+            var resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                return new User(
+                    resultSet.getInt("id"),
+                    resultSet.getString("name"),
+                    resultSet.getString("email"),
+                    resultSet.getString("passwordHash"),
+                    resultSet.getString("role"),
+                    resultSet.getString("status")
+                );
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
 }

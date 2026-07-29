@@ -100,9 +100,9 @@
                     <td class="px-5 py-3">
                       <div class="flex items-center justify-end gap-2">
                         <%-- Edit --%>
-                        <button class="p-1.5 rounded-lg text-slate-400 hover:bg-gray-100 hover:text-blue-600">
+                        <a href="${pageContext.request.contextPath}/staffs/edit?id=${staff.id}" class="p-1.5 rounded-lg text-slate-400 hover:bg-gray-100 hover:text-blue-600">
                           <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 3.75 20.25 7.5 8 19.75l-4 1 1-4L16.5 3.75Z"/></svg>
-                        </button>
+                        </a>
                         <%-- Delete --%>
                         <button class="p-1.5 rounded-lg text-slate-400 hover:bg-rose-50 hover:text-rose-600">
                           <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 7.5h12M9.5 7.5V6a1.5 1.5 0 0 1 1.5-1.5h2A1.5 1.5 0 0 1 14.5 6v1.5M7 7.5l.7 11a1.5 1.5 0 0 0 1.5 1.4h5.6a1.5 1.5 0 0 0 1.5-1.4l.7-11"/></svg>
