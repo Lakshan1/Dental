@@ -57,7 +57,7 @@
             <div>
               <label for="name" class="block text-sm font-medium text-slate-700 mb-1">Full Name</label>
               <input type="text" id="name" name="name" required
-                     placeholder="e.g. Dr. Nirmal"
+                     placeholder="e.g. John Doe"
                      value="${param.name}"
                      class="w-full px-3 py-2.5 text-sm rounded-lg border border-gray-300 focus:border-blue-600 focus:ring-1 focus:ring-blue-600 outline-none"/>
             </div>
@@ -66,7 +66,7 @@
             <div>
               <label for="email" class="block text-sm font-medium text-slate-700 mb-1">Email</label>
               <input type="email" id="email" name="email" required
-                     placeholder="name@sunrisedental.lk"
+                     placeholder="name@gmail.com"
                      value="${param.email}"
                      class="w-full px-3 py-2.5 text-sm rounded-lg border border-gray-300 focus:border-blue-600 focus:ring-1 focus:ring-blue-600 outline-none"/>
             </div>
@@ -75,9 +75,13 @@
             <div>
               <label for="password" class="block text-sm font-medium text-slate-700 mb-1">Password</label>
               <input type="password" id="password" name="password" required minlength="6"
-                     placeholder="Minimum 6 characters"
+                     pattern="(?=.*[A-Za-z])(?=.*\d).{6,}"
+                     placeholder="Minimum 6 characters, include letters and numbers"
                      class="w-full px-3 py-2.5 text-sm rounded-lg border border-gray-300 focus:border-blue-600 focus:ring-1 focus:ring-blue-600 outline-none"/>
-              <p class="text-xs text-slate-400 mt-1">Will be hashed before saving.</p>
+              <p class="text-xs text-slate-400 mt-1">At least 6 characters, including letters and numbers. Will be hashed before saving.</p>
+              <c:if test="${not empty passwordError}">
+                <p class="text-xs text-rose-600 mt-1">${passwordError}</p>
+              </c:if>
             </div>
 
             <%-- Two-up: Role + Status --%>
