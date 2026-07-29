@@ -44,10 +44,14 @@ public class StaffsServlet extends HttpServlet {
 
         request.setAttribute("staffs", staffs); // Set the staffs as a request attribute
 
+        int totalStaffs = staffDao.getTotalStaffCount(); // Get the total number of staff records
+
         request.setAttribute("totalActiveStaffCount", staffDao.getTotalActiveStaffCount()); // Set the total active staff count as a request attribute
-        request.setAttribute("totalStaffCount", staffDao.getTotalStaffCount()); // Set the total staff count as a request attribute
+        request.setAttribute("totalStaffCount", totalStaffs); // Set the total staff count as a request attribute
         request.setAttribute("totalOnLeaveStaffCount", staffDao.getTotalOnLeaveStaffCount()); // Set the total on-leave staff count as a request attribute
         request.setAttribute("page", page); // Set the current page number as a request attribute
+        request.setAttribute("hasPreviousPage", page > 1); // Set whether there is a previous page as a request attribute
+        request.setAttribute("hasNextPage", totalStaffs > (page * recordsPerPage)); // Set whether there is a next page as a request attribute
         request.getRequestDispatcher("WEB-INF/views/staffs.jsp").forward(request, response);
     }
 }

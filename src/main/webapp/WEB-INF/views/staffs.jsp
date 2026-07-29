@@ -120,8 +120,22 @@
           <div class="flex items-center justify-between px-5 py-3 border-t border-gray-200 text-sm text-slate-400">
             <span>Showing ${staffs.size()} of ${totalStaffCount} staff</span>
             <div class="flex gap-1">
-              <a href="?page=${page - 1}" class="px-3 py-1 rounded-lg border border-gray-200 hover:bg-gray-50">Prev</a>
-              <a href="?page=${page + 1}" class="px-3 py-1 rounded-lg border border-gray-200 hover:bg-gray-50">Next</a>
+              <c:choose>
+                <c:when test="${hasPreviousPage}">
+                  <a href="?page=${page - 1}" class="px-3 py-1 rounded-lg border border-gray-200 hover:bg-gray-50">Prev</a>
+                </c:when>
+                <c:otherwise>
+                  <span class="px-3 py-1 rounded-lg border border-gray-200 bg-gray-100 text-slate-400 cursor-not-allowed" aria-disabled="true">Prev</span>
+                </c:otherwise>
+              </c:choose>
+              <c:choose>
+                <c:when test="${hasNextPage}">
+                  <a href="?page=${page + 1}" class="px-3 py-1 rounded-lg border border-gray-200 hover:bg-gray-50">Next</a>
+                </c:when>
+                <c:otherwise>
+                  <span class="px-3 py-1 rounded-lg border border-gray-200 bg-gray-100 text-slate-400 cursor-not-allowed" aria-disabled="true">Next</span>
+                </c:otherwise>
+              </c:choose>
             </div>
           </div>
         </div>
