@@ -4,8 +4,10 @@
 /Users/admin/Desktop/Course/Advanced Programming/Dental/src/main/java/com/Dental/filter/AuthFilter.java
 /Users/admin/Desktop/Course/Advanced Programming/Dental/src/main/java/com/Dental/model/User.java
 /Users/admin/Desktop/Course/Advanced Programming/Dental/src/main/java/com/Dental/servlets/AddStaffServlet.java
+/Users/admin/Desktop/Course/Advanced Programming/Dental/src/main/java/com/Dental/servlets/DeleteStaffServlet.java
 /Users/admin/Desktop/Course/Advanced Programming/Dental/src/main/java/com/Dental/servlets/EditStaddServlet.java
 /Users/admin/Desktop/Course/Advanced Programming/Dental/src/main/java/com/Dental/servlets/IndexServlet.java
 /Users/admin/Desktop/Course/Advanced Programming/Dental/src/main/java/com/Dental/servlets/LoginServlet.java
 /Users/admin/Desktop/Course/Advanced Programming/Dental/src/main/java/com/Dental/servlets/LogoutServlet.java
 /Users/admin/Desktop/Course/Advanced Programming/Dental/src/main/java/com/Dental/servlets/StaffsServlet.java
+/Users/admin/Desktop/Course/Advanced Programming/Dental/src/main/java/com/Dental/util/StaffValidator.java

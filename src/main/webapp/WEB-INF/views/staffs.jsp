@@ -103,8 +103,9 @@
                         <a href="${pageContext.request.contextPath}/staffs/edit?id=${staff.id}" class="p-1.5 rounded-lg text-slate-400 hover:bg-gray-100 hover:text-blue-600">
                           <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 3.75 20.25 7.5 8 19.75l-4 1 1-4L16.5 3.75Z"/></svg>
                         </a>
-                        <%-- Delete --%>
-                        <button class="p-1.5 rounded-lg text-slate-400 hover:bg-rose-50 hover:text-rose-600">
+                        <%-- Delete: data-* carries the row's id/name into the JS confirm --%>
+                        <button type="button" data-id="${staff.id}" data-name="${staff.name}" onclick="confirmDelete(this)"
+                                class="p-1.5 rounded-lg text-slate-400 hover:bg-rose-50 hover:text-rose-600">
                           <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 7.5h12M9.5 7.5V6a1.5 1.5 0 0 1 1.5-1.5h2A1.5 1.5 0 0 1 14.5 6v1.5M7 7.5l.7 11a1.5 1.5 0 0 0 1.5 1.4h5.6a1.5 1.5 0 0 0 1.5-1.4l.7-11"/></svg>
                         </button>
                       </div>
@@ -145,6 +146,34 @@
   </div>
 
   <script>
+    // Confirm, then POST to /staffs/delete (POST so a stray GET can't delete).
+    function confirmDelete(btn) {
+      const id = btn.dataset.id;
+      const name = btn.dataset.name;
+      Swal.fire({
+        title: 'Delete ' + name + '?',
+        text: 'This cannot be undone.',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#e11d48',
+        cancelButtonColor: '#6b7280',
+        confirmButtonText: 'Yes, delete'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          const form = document.createElement('form');
+          form.method = 'POST';
+          form.action = '${pageContext.request.contextPath}/staffs/delete';
+          const input = document.createElement('input');
+          input.type = 'hidden';
+          input.name = 'id';
+          input.value = id;
+          form.appendChild(input);
+          document.body.appendChild(form);
+          form.submit();
+        }
+      });
+    }
+
     function searchStaff(event) {
       if (event.target.value.trim() === "") {
         // If the search box is empty, remove the search parameter from the URL and reload the page

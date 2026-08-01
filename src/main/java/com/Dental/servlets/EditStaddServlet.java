@@ -6,6 +6,7 @@ import org.mindrot.jbcrypt.BCrypt;
 
 import com.Dental.dao.StaffDao;
 import com.Dental.model.User;
+import com.Dental.util.StaffValidator;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -41,37 +42,67 @@ public class EditStaddServlet extends HttpServlet {
 
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Handle form submission for editing staff details
-        int staffId = Integer.parseInt(request.getParameter("id"));
-        String name = request.getParameter("name");
-        String email = request.getParameter("email");
-        String role = request.getParameter("role");
-        String status = request.getParameter("status");
-        String password = request.getParameter("password");
+        StaffDao staffDao = new StaffDao();
 
-        User user = new StaffDao().getStaffById(staffId);
-
-        // Validate the input fields (you can add more validation as needed)
-        if (name == null || name.trim().isEmpty() || email == null || email.trim().isEmpty() ||
-            role == null || role.trim().isEmpty() || status == null || status.trim().isEmpty()) {
-            request.setAttribute("error", "All fields are required.");
+        // BUG FIX 1: guard the id parse (was an unguarded parseInt -> 500 on bad id).
+        int staffId;
+        try {
+            staffId = Integer.parseInt(request.getParameter("id"));
+        } catch (NumberFormatException e) {
+            request.setAttribute("error", "Invalid staff ID.");
             request.getRequestDispatcher("/WEB-INF/views/edit-staff.jsp").forward(request, response);
             return;
         }
 
-        if (password != null && !password.trim().isEmpty()) {
-            // If a new password is provided, hash it before saving
-            String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());;
-            // Create a User object with the updated details
-            User updatedStaff = new User(staffId, name, email, hashedPassword, role, status); 
-
-            new StaffDao().updateStaff(updatedStaff);
-        } else {
-            // If no new password is provided, update without changing the password
-            User updatedStaff = new User(staffId, name, email, user.getPasswordHash(), role, status); // Pass null for password
-            new StaffDao().updateStaff(updatedStaff);
+        // BUG FIX 2: null-check the existing staff (was NPE on user.getPasswordHash()).
+        User existing = staffDao.getStaffById(staffId);
+        if (existing == null) {
+            request.setAttribute("error", "Staff member not found.");
+            request.getRequestDispatcher("/WEB-INF/views/edit-staff.jsp").forward(request, response);
+            return;
         }
 
-        response.sendRedirect(request.getContextPath() + "/staffs");
+        // Read + trim inputs.
+        String name     = trim(request.getParameter("name"));
+        String email    = trim(request.getParameter("email"));
+        String role     = trim(request.getParameter("role"));
+        String status   = trim(request.getParameter("status"));
+        String password = request.getParameter("password");   // blank = keep current
+
+        // Server-side validation (password optional on edit).
+        String error = StaffValidator.validate(name, email, password, role, status, false);
+        if (error == null
+                // Unique email, but allow keeping the SAME email (exclude self).
+                && !existing.getEmail().equalsIgnoreCase(email)
+                && staffDao.checkIfEmailExists(email)) {
+            error = "Another staff member already uses that email.";
+        }
+        if (error != null) {
+            // Re-show the form with what they typed (form needs ${staff}).
+            request.setAttribute("staff", new User(staffId, name, email, "", role, status));
+            request.setAttribute("error", error);
+            request.getRequestDispatcher("/WEB-INF/views/edit-staff.jsp").forward(request, response);
+            return;
+        }
+
+        // Keep the old hash if no new password was entered, else hash the new one.
+        String passwordHash = StaffValidator.isBlank(password)
+                ? existing.getPasswordHash()
+                : BCrypt.hashpw(password, BCrypt.gensalt());
+
+        User updatedStaff = new User(staffId, name, email, passwordHash, role, status);
+
+        // BUG FIX 3: check the update result instead of ignoring it.
+        if (staffDao.updateStaff(updatedStaff)) {
+            response.sendRedirect(request.getContextPath() + "/staffs");
+        } else {
+            request.setAttribute("staff", existing);
+            request.setAttribute("error", "Could not update staff. Please try again.");
+            request.getRequestDispatcher("/WEB-INF/views/edit-staff.jsp").forward(request, response);
+        }
+    }
+
+    private String trim(String s) {
+        return s == null ? null : s.trim();
     }
 }

@@ -209,6 +209,21 @@ public class StaffDao {
         }
     }
 
+    // Delete a staff member. The role='admin' guard means this endpoint can only
+    // ever delete staff, never a customer, even if someone passes a customer's id.
+    public boolean deleteStaff(int id) {
+        String sql = "DELETE FROM users WHERE id = ? AND role = 'admin'";
+
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, id);
+            return statement.executeUpdate() > 0;   // true if a row was deleted
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     public User getStaffById(int id) {
         String sql = "SELECT * FROM users WHERE id = ? AND role = 'admin'";
 

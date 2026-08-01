@@ -6,6 +6,7 @@ import org.mindrot.jbcrypt.BCrypt;
 
 import com.Dental.dao.StaffDao;
 import com.Dental.model.User;
+import com.Dental.util.StaffValidator;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -22,37 +23,34 @@ public class AddStaffServlet  extends HttpServlet{
 
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Handle form submission for adding a new staff member
-        // You can retrieve form data using request.getParameter("parameterName")
-        String name = request.getParameter("name");
-        String email = request.getParameter("email");
-        String password = request.getParameter("password");
-        String role = request.getParameter("role");
-        String status = request.getParameter("status");
+        // Read + trim inputs (trimming stops stray spaces being stored / breaking login).
+        String name     = trim(request.getParameter("name"));
+        String email    = trim(request.getParameter("email"));
+        String password = request.getParameter("password");   // don't trim the password itself
+        String role     = trim(request.getParameter("role"));
+        String status   = trim(request.getParameter("status"));
 
         StaffDao staffDao = new StaffDao();
 
-        // basic server-side validation (don't rely on the browser's "required")
-        if (isBlank(name) || isBlank(email) || isBlank(password)) {
-            request.setAttribute("error", "Name, email and password are required.");
+        // Server-side validation (mirrors the form, but can't be bypassed).
+        String error = StaffValidator.validate(name, email, password, role, status, true);
+        if (error != null) {
+            request.setAttribute("error", error);
             request.getRequestDispatcher("/WEB-INF/views/add-staff.jsp").forward(request, response);
             return;
         }
 
-        // check if the email already exists
+        // Unique email.
         if (staffDao.checkIfEmailExists(email)) {
             request.setAttribute("error", "A staff member with that email already exists.");
             request.getRequestDispatcher("/WEB-INF/views/add-staff.jsp").forward(request, response);
             return;
         }
 
-        // encrypt password
+        // Hash and insert.
         String passwordHash = BCrypt.hashpw(password, BCrypt.gensalt());
-
-        // create local user model (id = 0; the DB auto-generates the real id)
         User user = new User(0, name, email, passwordHash, role, status);
 
-        // insert; only redirect on success, otherwise show an error
         if (staffDao.addStaff(user)) {
             response.sendRedirect(request.getContextPath() + "/staffs");
         } else {
@@ -61,7 +59,7 @@ public class AddStaffServlet  extends HttpServlet{
         }
     }
 
-    private boolean isBlank(String s) {
-        return s == null || s.trim().isEmpty();
+    private String trim(String s) {
+        return s == null ? null : s.trim();
     }
 }
