@@ -1,3 +1,4 @@
+com/Dental/servlets/DentistsServlet.class
 com/Dental/filter/AuthFilter.class
 com/Dental/servlets/EditStaddServlet.class
 com/Dental/servlets/LogoutServlet.class
@@ -7,7 +8,13 @@ com/Dental/dao/UserDao.class
 com/Dental/servlets/AddStaffServlet.class
 com/Dental/servlets/StaffsServlet.class
 com/Dental/db/DBConnection.class
+com/Dental/servlets/EditDentistServlet.class
 com/Dental/model/User.class
+com/Dental/servlets/DeleteDentistServlet.class
+com/Dental/util/DentistValidator.class
 com/Dental/servlets/IndexServlet.class
+com/Dental/model/Dentist.class
+com/Dental/servlets/AddDentistServlet.class
 com/Dental/util/StaffValidator.class
 com/Dental/servlets/DeleteStaffServlet.class
+com/Dental/dao/DentistDao.class

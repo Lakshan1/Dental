@@ -51,7 +51,7 @@
     </a>
 
     <%-- Dentists --%>
-    <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-lg ${active == 'dentists' ? 'bg-blue-50 text-blue-700 font-medium' : 'text-slate-600 hover:bg-gray-100'}">
+    <a href="${pageContext.request.contextPath}/dentists" class="flex items-center gap-3 px-3 py-2 rounded-lg ${active == 'dentists' ? 'bg-blue-50 text-blue-700 font-medium' : 'text-slate-600 hover:bg-gray-100'}">
       <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM4.5 20.25a7.5 7.5 0 0 1 15 0"/>
       </svg>
