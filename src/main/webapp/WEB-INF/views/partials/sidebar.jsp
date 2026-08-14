@@ -35,7 +35,7 @@
     </a>
 
     <%-- Appointments --%>
-    <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-lg ${active == 'appointments' ? 'bg-blue-50 text-blue-700 font-medium' : 'text-slate-600 hover:bg-gray-100'}">
+    <a href="${pageContext.request.contextPath}/appointments" class="flex items-center gap-3 px-3 py-2 rounded-lg ${active == 'appointments' ? 'bg-blue-50 text-blue-700 font-medium' : 'text-slate-600 hover:bg-gray-100'}">
       <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 8.25h18M4.5 5.25h15A1.5 1.5 0 0 1 21 6.75v12A1.5 1.5 0 0 1 19.5 20.25h-15A1.5 1.5 0 0 1 3 18.75v-12A1.5 1.5 0 0 1 4.5 5.25Z"/>
       </svg>
