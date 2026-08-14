@@ -22,10 +22,12 @@ com/Dental/servlets/AppointmentSlotsServlet.class
 com/Dental/servlets/AddStaffServlet.class
 com/Dental/db/DBConnection.class
 com/Dental/dao/AppointmentDao.class
+com/Dental/servlets/DeleteAppointmentServlet.class
 com/Dental/model/User.class
 com/Dental/servlets/AppointmentsServlet.class
 com/Dental/dao/PatientDao.class
 com/Dental/servlets/AddAppointmentServlet.class
 com/Dental/servlets/IndexServlet.class
 com/Dental/model/Dentist.class
+com/Dental/servlets/EditAppointmentServlet.class
 com/Dental/servlets/DeleteStaffServlet.class

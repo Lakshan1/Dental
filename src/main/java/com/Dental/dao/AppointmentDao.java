@@ -104,16 +104,78 @@ public class AppointmentDao {
         return booked;
     }
 
+    // Booked times, but ignoring one appointment (used when editing that
+    // appointment so its own slot still shows as available).
+    public List<String> getBookedTimes(int dentistId, String date, int excludeId) {
+        String sql = "SELECT appointment_time FROM appointments "
+                   + "WHERE dentist_id = ? AND appointment_date = ? AND status <> 'cancelled' AND id <> ?";
+        List<String> booked = new ArrayList<>();
+        try (Connection c = DBConnection.getConnection();
+             PreparedStatement ps = c.prepareStatement(sql)) {
+            ps.setInt(1, dentistId);
+            ps.setString(2, date);
+            ps.setInt(3, excludeId);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    String t = rs.getString("appointment_time");
+                    booked.add(t != null && t.length() >= 5 ? t.substring(0, 5) : t);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return booked;
+    }
+
     // Server-side double-booking guard used before inserting.
     public boolean isSlotTaken(int dentistId, String date, String time) {
+        return isSlotTaken(dentistId, date, time, 0);
+    }
+
+    // Same guard, but ignoring one appointment id (for edit).
+    public boolean isSlotTaken(int dentistId, String date, String time, int excludeId) {
         String sql = "SELECT 1 FROM appointments "
-                   + "WHERE dentist_id = ? AND appointment_date = ? AND appointment_time = ? AND status <> 'cancelled'";
+                   + "WHERE dentist_id = ? AND appointment_date = ? AND appointment_time = ? "
+                   + "AND status <> 'cancelled' AND id <> ?";
         try (Connection c = DBConnection.getConnection();
              PreparedStatement ps = c.prepareStatement(sql)) {
             ps.setInt(1, dentistId);
             ps.setString(2, date);
             ps.setString(3, time);
+            ps.setInt(4, excludeId);
             return ps.executeQuery().next();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    // Update an appointment.
+    public boolean updateAppointment(Appointment a) {
+        String sql = "UPDATE appointments SET dentist_id = ?, treatment_type = ?, "
+                   + "appointment_date = ?, appointment_time = ?, status = ? WHERE id = ?";
+        try (Connection c = DBConnection.getConnection();
+             PreparedStatement ps = c.prepareStatement(sql)) {
+            ps.setInt(1, a.getDentistId());
+            ps.setString(2, a.getTreatmentType());
+            ps.setString(3, a.getAppointmentDate());
+            ps.setString(4, a.getAppointmentTime());
+            ps.setString(5, a.getStatus());
+            ps.setInt(6, a.getId());
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    // Delete an appointment.
+    public boolean deleteAppointment(int id) {
+        String sql = "DELETE FROM appointments WHERE id = ?";
+        try (Connection c = DBConnection.getConnection();
+             PreparedStatement ps = c.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            return ps.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
             return false;

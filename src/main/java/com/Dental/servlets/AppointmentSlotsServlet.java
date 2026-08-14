@@ -47,9 +47,12 @@ public class AppointmentSlotsServlet extends HttpServlet {
         String start = dentist.getStartTimes().get(day);
         String end = dentist.getEndTimes().get(day);
 
-        // all slots for the day, minus the ones already booked
+        // all slots for the day, minus the ones already booked.
+        // excludeId (optional) lets an appointment being edited keep its own slot.
         List<String> slots = SlotService.generateSlots(start, end, dentist.getSlotMinutes());
-        slots.removeAll(appointmentDao.getBookedTimes(dentistId, date));
+        int excludeId = 0;
+        try { excludeId = Integer.parseInt(request.getParameter("excludeId")); } catch (Exception ignored) {}
+        slots.removeAll(appointmentDao.getBookedTimes(dentistId, date, excludeId));
 
         // write a simple JSON array of strings
         StringBuilder json = new StringBuilder("[");

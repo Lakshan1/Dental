@@ -30,13 +30,19 @@
 
         <div class="max-w-3xl">
 
-          <%-- header row: appointment number + status --%>
+          <%-- header row: appointment number + status + actions --%>
           <div class="flex items-center justify-between mb-6">
             <div>
               <h2 class="text-2xl font-bold text-slate-800">Appointment APT-${appointment.id}</h2>
               <p class="text-sm text-slate-400">${appointment.appointmentDate} at ${appointment.appointmentTime}</p>
             </div>
-            <span class="px-3 py-1 rounded-full text-sm ${appointment.status == 'completed' ? 'bg-green-50 text-green-600' : appointment.status == 'cancelled' ? 'bg-red-50 text-red-600' : 'bg-blue-50 text-blue-600'}">${appointment.status}</span>
+            <div class="flex items-center gap-3">
+              <span class="px-3 py-1 rounded-full text-sm ${appointment.status == 'completed' ? 'bg-green-50 text-green-600' : appointment.status == 'cancelled' ? 'bg-red-50 text-red-600' : 'bg-blue-50 text-blue-600'}">${appointment.status}</span>
+              <a href="${pageContext.request.contextPath}/appointments/edit?id=${appointment.id}"
+                 class="px-4 py-2 rounded-lg border border-gray-300 text-sm font-medium text-slate-600 hover:bg-gray-50">Edit</a>
+              <button type="button" onclick="confirmDelete(${appointment.id})"
+                      class="px-4 py-2 rounded-lg bg-rose-600 text-white text-sm font-medium hover:bg-rose-700">Delete</button>
+            </div>
           </div>
 
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -77,5 +83,31 @@
       </main>
     </div>
   </div>
+
+  <script>
+    // Confirm, then POST to /appointments/delete.
+    function confirmDelete(id) {
+      Swal.fire({
+        title: 'Delete this appointment?',
+        text: 'This cannot be undone.',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#e11d48',
+        cancelButtonColor: '#6b7280',
+        confirmButtonText: 'Yes, delete'
+      }).then(function (result) {
+        if (result.isConfirmed) {
+          var form = document.createElement('form');
+          form.method = 'POST';
+          form.action = '${pageContext.request.contextPath}/appointments/delete';
+          var input = document.createElement('input');
+          input.type = 'hidden'; input.name = 'id'; input.value = id;
+          form.appendChild(input);
+          document.body.appendChild(form);
+          form.submit();
+        }
+      });
+    }
+  </script>
 </body>
 </html>
