@@ -43,7 +43,7 @@
     </a>
 
     <%-- Patients --%>
-    <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-lg ${active == 'patients' ? 'bg-blue-50 text-blue-700 font-medium' : 'text-slate-600 hover:bg-gray-100'}">
+    <a href="${pageContext.request.contextPath}/patients" class="flex items-center gap-3 px-3 py-2 rounded-lg ${active == 'patients' ? 'bg-blue-50 text-blue-700 font-medium' : 'text-slate-600 hover:bg-gray-100'}">
       <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" d="M15 19.5a3 3 0 0 0-6 0M18 19.5a6 6 0 0 0-12 0M12 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/>
       </svg>

@@ -32,6 +32,26 @@ public class AppointmentDao {
         return list;
     }
 
+    // All appointments for one patient (their history on the patient detail page).
+    public List<Appointment> getAppointmentsByPatient(int patientId) {
+        String sql = "SELECT a.*, p.name AS patient_name, u.name AS dentist_name "
+                   + "FROM appointments a "
+                   + "JOIN patients p ON a.patient_id = p.id "
+                   + "JOIN users u ON a.dentist_id = u.id "
+                   + "WHERE a.patient_id = ? ORDER BY a.appointment_date DESC, a.appointment_time";
+        List<Appointment> list = new ArrayList<>();
+        try (Connection c = DBConnection.getConnection();
+             PreparedStatement ps = c.prepareStatement(sql)) {
+            ps.setInt(1, patientId);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) list.add(mapRow(rs));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
     // One appointment with ALL the detail (patient address/contact, dentist fee).
     public Appointment getAppointmentById(int id) {
         String sql = "SELECT a.*, p.name AS patient_name, p.address AS patient_address, "
