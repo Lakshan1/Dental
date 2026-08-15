@@ -68,26 +68,6 @@
       </a>
     </c:if>
 
-    <%-- Reports --%>
-    <c:if test="${sessionScope.user.role == 'superadmin'}">
-      <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-lg ${active == 'reports' ? 'bg-blue-50 text-blue-700 font-medium' : 'text-slate-600 hover:bg-gray-100'}">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M3 3v18h18M7.5 15l3-3 3 3 4.5-4.5"/>
-        </svg>
-        Reports
-      </a>
-    </c:if>
-
-    <%-- Settings --%>
-    <c:if test="${sessionScope.user.role == 'superadmin'}">
-      <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-lg ${active == 'settings' ? 'bg-blue-50 text-blue-700 font-medium' : 'text-slate-600 hover:bg-gray-100'}">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 3.75h3l.5 2.3 2 .85 2-1.15 2.1 2.1-1.15 2 .85 2 2.3.5v3l-2.3.5-.85 2 1.15 2-2.1 2.1-2-1.15-2 .85-.5 2.3h-3l-.5-2.3-2-.85-2 1.15-2.1-2.1 1.15-2-.85-2-2.3-.5v-3l2.3-.5.85-2-1.15-2 2.1-2.1 2 1.15 2-.85.5-2.3ZM12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/>
-        </svg>
-        Settings
-      </a>
-    </c:if>
-
     <%-- Help --%>
     <a href="${pageContext.request.contextPath}/help" class="flex items-center gap-3 px-3 py-2 rounded-lg ${active == 'help' ? 'bg-blue-50 text-blue-700 font-medium' : 'text-slate-600 hover:bg-gray-100'}">
       <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">

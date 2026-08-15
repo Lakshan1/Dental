@@ -32,6 +32,25 @@ public class AppointmentDao {
         return list;
     }
 
+    // Today's appointments (for the dashboard), soonest first.
+    public List<Appointment> getTodaysAppointments() {
+        String sql = "SELECT a.*, p.name AS patient_name, u.name AS dentist_name "
+                   + "FROM appointments a "
+                   + "JOIN patients p ON a.patient_id = p.id "
+                   + "JOIN users u ON a.dentist_id = u.id "
+                   + "WHERE a.appointment_date = CURDATE() "
+                   + "ORDER BY a.appointment_time";
+        List<Appointment> list = new ArrayList<>();
+        try (Connection c = DBConnection.getConnection();
+             Statement st = c.createStatement();
+             ResultSet rs = st.executeQuery(sql)) {
+            while (rs.next()) list.add(mapRow(rs));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
     // All appointments for one patient (their history on the patient detail page).
     public List<Appointment> getAppointmentsByPatient(int patientId) {
         String sql = "SELECT a.*, p.name AS patient_name, u.name AS dentist_name "

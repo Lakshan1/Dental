@@ -13,6 +13,18 @@ import com.Dental.model.Patient;
 
 public class PatientDao {
 
+    public int getTotalPatientCount() {
+        String sql = "SELECT COUNT(*) AS total FROM patients";
+        try (Connection c = DBConnection.getConnection();
+             Statement st = c.createStatement();
+             ResultSet rs = st.executeQuery(sql)) {
+            if (rs.next()) return rs.getInt("total");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
     // all patients (used to fill the "existing patient" dropdown)
     public List<Patient> getAllPatients() {
         String sql = "SELECT * FROM patients ORDER BY name";

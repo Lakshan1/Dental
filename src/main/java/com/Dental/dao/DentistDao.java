@@ -183,6 +183,18 @@ public class DentistDao {
         return 0;
     }
 
+    public int getActiveDentistCount() {
+        String sql = "SELECT COUNT(*) AS total FROM users WHERE role = 'doctor' AND status = 'active'";
+        try (Connection c = DBConnection.getConnection();
+             Statement st = c.createStatement();
+             ResultSet rs = st.executeQuery(sql)) {
+            if (rs.next()) return rs.getInt("total");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
     // ================= small helpers =================
 
     // Turn one ResultSet row into a Dentist object.

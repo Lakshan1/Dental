@@ -72,6 +72,20 @@ public class BillDao {
         }
     }
 
+    // Sum of all bills generated this calendar month (for the dashboard revenue card).
+    public double getMonthlyRevenue() {
+        String sql = "SELECT COALESCE(SUM(total_amount), 0) AS total FROM bills "
+                   + "WHERE MONTH(generated_at) = MONTH(CURDATE()) AND YEAR(generated_at) = YEAR(CURDATE())";
+        try (Connection c = DBConnection.getConnection();
+             Statement st = c.createStatement();
+             ResultSet rs = st.executeQuery(sql)) {
+            if (rs.next()) return rs.getDouble("total");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
     private Bill mapRow(ResultSet rs) throws SQLException {
         Bill b = new Bill();
         b.setId(rs.getInt("id"));
