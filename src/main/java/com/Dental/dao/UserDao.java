@@ -9,9 +9,11 @@ import com.Dental.db.DBConnection;
 import com.Dental.model.User;
 
 public class UserDao {
-    // Method to retrieve a user by email from the database
+    // Method to retrieve a user by email from the database.
+    // Only staff roles can log in - dentists (doctor) and patients cannot,
+    // so they are excluded here even though they exist in the users table.
     public User getUserByEmail(String email) {
-        String sql = "SELECT * FROM users WHERE email = ?";
+        String sql = "SELECT * FROM users WHERE email = ? AND role IN ('admin', 'superadmin')";
 
         // Database connection and query execution logic
         try (Connection connection = DBConnection.getConnection();
