@@ -1,4 +1,5 @@
 /Users/admin/Desktop/Course/Advanced Programming/Dental/src/main/java/com/Dental/dao/AppointmentDao.java
+/Users/admin/Desktop/Course/Advanced Programming/Dental/src/main/java/com/Dental/dao/BillDao.java
 /Users/admin/Desktop/Course/Advanced Programming/Dental/src/main/java/com/Dental/dao/DentistDao.java
 /Users/admin/Desktop/Course/Advanced Programming/Dental/src/main/java/com/Dental/dao/PatientDao.java
 /Users/admin/Desktop/Course/Advanced Programming/Dental/src/main/java/com/Dental/dao/StaffDao.java
@@ -6,6 +7,7 @@
 /Users/admin/Desktop/Course/Advanced Programming/Dental/src/main/java/com/Dental/db/DBConnection.java
 /Users/admin/Desktop/Course/Advanced Programming/Dental/src/main/java/com/Dental/filter/AuthFilter.java
 /Users/admin/Desktop/Course/Advanced Programming/Dental/src/main/java/com/Dental/model/Appointment.java
+/Users/admin/Desktop/Course/Advanced Programming/Dental/src/main/java/com/Dental/model/Bill.java
 /Users/admin/Desktop/Course/Advanced Programming/Dental/src/main/java/com/Dental/model/Dentist.java
 /Users/admin/Desktop/Course/Advanced Programming/Dental/src/main/java/com/Dental/model/Patient.java
 /Users/admin/Desktop/Course/Advanced Programming/Dental/src/main/java/com/Dental/model/User.java
@@ -15,6 +17,7 @@
 /Users/admin/Desktop/Course/Advanced Programming/Dental/src/main/java/com/Dental/servlets/AppointmentDetailServlet.java
 /Users/admin/Desktop/Course/Advanced Programming/Dental/src/main/java/com/Dental/servlets/AppointmentSlotsServlet.java
 /Users/admin/Desktop/Course/Advanced Programming/Dental/src/main/java/com/Dental/servlets/AppointmentsServlet.java
+/Users/admin/Desktop/Course/Advanced Programming/Dental/src/main/java/com/Dental/servlets/BillViewServlet.java
 /Users/admin/Desktop/Course/Advanced Programming/Dental/src/main/java/com/Dental/servlets/DeleteAppointmentServlet.java
 /Users/admin/Desktop/Course/Advanced Programming/Dental/src/main/java/com/Dental/servlets/DeleteDentistServlet.java
 /Users/admin/Desktop/Course/Advanced Programming/Dental/src/main/java/com/Dental/servlets/DeletePatientServlet.java
@@ -24,6 +27,7 @@
 /Users/admin/Desktop/Course/Advanced Programming/Dental/src/main/java/com/Dental/servlets/EditDentistServlet.java
 /Users/admin/Desktop/Course/Advanced Programming/Dental/src/main/java/com/Dental/servlets/EditPatientServlet.java
 /Users/admin/Desktop/Course/Advanced Programming/Dental/src/main/java/com/Dental/servlets/EditStaddServlet.java
+/Users/admin/Desktop/Course/Advanced Programming/Dental/src/main/java/com/Dental/servlets/GenerateBillServlet.java
 /Users/admin/Desktop/Course/Advanced Programming/Dental/src/main/java/com/Dental/servlets/HelpServlet.java
 /Users/admin/Desktop/Course/Advanced Programming/Dental/src/main/java/com/Dental/servlets/IndexServlet.java
 /Users/admin/Desktop/Course/Advanced Programming/Dental/src/main/java/com/Dental/servlets/LoginServlet.java
@@ -32,6 +36,7 @@
 /Users/admin/Desktop/Course/Advanced Programming/Dental/src/main/java/com/Dental/servlets/PatientsServlet.java
 /Users/admin/Desktop/Course/Advanced Programming/Dental/src/main/java/com/Dental/servlets/StaffsServlet.java
 /Users/admin/Desktop/Course/Advanced Programming/Dental/src/main/java/com/Dental/util/AppointmentValidator.java
+/Users/admin/Desktop/Course/Advanced Programming/Dental/src/main/java/com/Dental/util/BillValidator.java
 /Users/admin/Desktop/Course/Advanced Programming/Dental/src/main/java/com/Dental/util/DentistValidator.java
 /Users/admin/Desktop/Course/Advanced Programming/Dental/src/main/java/com/Dental/util/PatientValidator.java
 /Users/admin/Desktop/Course/Advanced Programming/Dental/src/main/java/com/Dental/util/SlotService.java

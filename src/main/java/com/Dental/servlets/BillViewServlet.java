@@ -5,6 +5,7 @@ import java.io.IOException;
 import com.Dental.dao.AppointmentDao;
 import com.Dental.dao.BillDao;
 import com.Dental.model.Appointment;
+import com.Dental.model.Bill;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -12,8 +13,8 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-@WebServlet("/appointments/view")
-public class AppointmentDetailServlet extends HttpServlet {
+@WebServlet("/appointments/bill/view")
+public class BillViewServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -33,11 +34,15 @@ public class AppointmentDetailServlet extends HttpServlet {
             return;
         }
 
+        Bill bill = new BillDao().getByAppointmentId(id);
+        if (bill == null) {
+            // no bill yet -> send them to generate one first
+            response.sendRedirect(request.getContextPath() + "/appointments/bill?id=" + id);
+            return;
+        }
+
         request.setAttribute("appointment", appointment);
-        // bill button only makes sense once the appointment is completed; the JSP
-        // checks appointment.status itself, but we also load any existing bill so
-        // it can show "Print Bill" instead of "Generate Bill" when one already exists.
-        request.setAttribute("bill", new BillDao().getByAppointmentId(id));
-        request.getRequestDispatcher("/WEB-INF/views/appointment-detail.jsp").forward(request, response);
+        request.setAttribute("bill", bill);
+        request.getRequestDispatcher("/WEB-INF/views/bill-print.jsp").forward(request, response);
     }
 }

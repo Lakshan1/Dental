@@ -15,14 +15,18 @@ com/Dental/util/DentistValidator.class
 com/Dental/util/SlotService.class
 com/Dental/servlets/HelpServlet.class
 com/Dental/servlets/EditPatientServlet.class
+com/Dental/util/BillValidator.class
 com/Dental/servlets/AddDentistServlet.class
+com/Dental/model/Bill.class
 com/Dental/util/StaffValidator.class
 com/Dental/dao/DentistDao.class
 com/Dental/servlets/AppointmentDetailServlet.class
 com/Dental/filter/AuthFilter.class
 com/Dental/servlets/EditStaddServlet.class
+com/Dental/dao/BillDao.class
 com/Dental/servlets/LogoutServlet.class
 com/Dental/servlets/AppointmentSlotsServlet.class
+com/Dental/servlets/GenerateBillServlet.class
 com/Dental/servlets/AddStaffServlet.class
 com/Dental/db/DBConnection.class
 com/Dental/dao/AppointmentDao.class
@@ -36,4 +40,5 @@ com/Dental/servlets/IndexServlet.class
 com/Dental/model/Dentist.class
 com/Dental/servlets/EditAppointmentServlet.class
 com/Dental/servlets/DeleteStaffServlet.class
+com/Dental/servlets/BillViewServlet.class
 com/Dental/servlets/DeletePatientServlet.class

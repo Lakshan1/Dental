@@ -30,6 +30,13 @@
 
         <div class="max-w-3xl">
 
+          <%-- shown when someone tries to generate a bill before the appointment is completed --%>
+          <c:if test="${param.err == 'notcompleted'}">
+            <div class="mb-4 px-4 py-3 rounded-lg bg-amber-50 border border-amber-100 text-sm text-amber-700">
+              A bill can only be generated once the appointment is marked as <strong>completed</strong>.
+            </div>
+          </c:if>
+
           <%-- header row: appointment number + status + actions --%>
           <div class="flex items-center justify-between mb-6">
             <div>
@@ -38,6 +45,24 @@
             </div>
             <div class="flex items-center gap-3">
               <span class="px-3 py-1 rounded-full text-sm ${appointment.status == 'completed' ? 'bg-green-50 text-green-600' : appointment.status == 'cancelled' ? 'bg-red-50 text-red-600' : 'bg-blue-50 text-blue-600'}">${appointment.status}</span>
+
+              <%-- Bill: only once the appointment is marked completed.
+                   No bill yet -> "Generate Bill". Bill exists -> "Print Bill" (+ small edit link). --%>
+              <c:if test="${appointment.status == 'completed'}">
+                <c:choose>
+                  <c:when test="${not empty bill}">
+                    <a href="${pageContext.request.contextPath}/appointments/bill/view?id=${appointment.id}"
+                       class="px-4 py-2 rounded-lg bg-emerald-600 text-white text-sm font-medium hover:bg-emerald-700">Print Bill</a>
+                    <a href="${pageContext.request.contextPath}/appointments/bill?id=${appointment.id}"
+                       class="text-sm text-slate-500 hover:text-slate-700 hover:underline">Edit amounts</a>
+                  </c:when>
+                  <c:otherwise>
+                    <a href="${pageContext.request.contextPath}/appointments/bill?id=${appointment.id}"
+                       class="px-4 py-2 rounded-lg bg-emerald-600 text-white text-sm font-medium hover:bg-emerald-700">Generate Bill</a>
+                  </c:otherwise>
+                </c:choose>
+              </c:if>
+
               <a href="${pageContext.request.contextPath}/appointments/edit?id=${appointment.id}"
                  class="px-4 py-2 rounded-lg border border-gray-300 text-sm font-medium text-slate-600 hover:bg-gray-50">Edit</a>
               <button type="button" onclick="confirmDelete(${appointment.id})"
