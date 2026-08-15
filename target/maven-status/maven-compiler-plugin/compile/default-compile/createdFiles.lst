@@ -13,6 +13,7 @@ com/Dental/servlets/PatientDetailServlet.class
 com/Dental/servlets/DeleteDentistServlet.class
 com/Dental/util/DentistValidator.class
 com/Dental/util/SlotService.class
+com/Dental/servlets/HelpServlet.class
 com/Dental/servlets/EditPatientServlet.class
 com/Dental/servlets/AddDentistServlet.class
 com/Dental/util/StaffValidator.class
