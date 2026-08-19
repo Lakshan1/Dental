@@ -27,8 +27,11 @@ public class AddStaffServlet  extends HttpServlet{
         String name     = trim(request.getParameter("name"));
         String email    = trim(request.getParameter("email"));
         String password = request.getParameter("password");   // don't trim the password itself
-        String role     = trim(request.getParameter("role"));
-        String status   = trim(request.getParameter("status"));
+
+        // Role and status aren't asked for on the Add Staff form - every staff
+        // member created here is a "staff" role, starting out "active".
+        String role   = "staff";
+        String status = "active";
 
         StaffDao staffDao = new StaffDao();
 
