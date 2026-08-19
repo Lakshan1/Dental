@@ -88,13 +88,13 @@
                 <%-- Two-up: Role + Status --%>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
 
-                <%-- Role. Your staff query filters on role='admin', so this stores
+                <%-- Role. Your staff query filters on role='staff', so this stores
                     the User.role value. Adjust the options to your setup. --%>
                 <div>
                     <label for="role" class="block text-sm font-medium text-slate-700 mb-1">Role</label>
                     <select id="role" name="role" default="${staff.role}"
                             class="w-full px-3 py-2.5 text-sm rounded-lg border border-gray-300 bg-white focus:border-blue-600 focus:ring-1 focus:ring-blue-600 outline-none">
-                    <option value="admin" default>Admin</option>
+                    <option value="staff" default>Staff</option>
                     </select>
                 </div>
 

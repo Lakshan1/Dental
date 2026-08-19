@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
 public class StaffValidator {
 
     private static final Pattern EMAIL = Pattern.compile("^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$");
-    private static final Set<String> ALLOWED_ROLES = Set.of("admin");
+    private static final Set<String> ALLOWED_ROLES = Set.of("staff");
     private static final Set<String> ALLOWED_STATUSES = Set.of("active", "leave", "restricted");
 
     /**

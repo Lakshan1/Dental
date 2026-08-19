@@ -12,7 +12,7 @@ import com.Dental.model.User;
 public class StaffDao {
     // Method to retrieve all the staffs
     public List<User> getAllStaffs() {
-        String sql = "SELECT * FROM users WHERE role = 'admin'";
+        String sql = "SELECT * FROM users WHERE role = 'staff'";
 
         try (Connection connection = DBConnection.getConnection()){
             // Execute the query and get the result set
@@ -44,7 +44,7 @@ public class StaffDao {
 
     // Method to retrieve all the staffs with pagination
     public List<User> getAllStaffs(int page, int recordsPerPage) {
-        String sql = "SELECT * FROM users WHERE role = 'admin' LIMIT ? OFFSET ?";
+        String sql = "SELECT * FROM users WHERE role = 'staff' LIMIT ? OFFSET ?";
 
         try (Connection connection = DBConnection.getConnection();
     PreparedStatement statement = connection.prepareStatement(sql)){
@@ -75,7 +75,7 @@ public class StaffDao {
     }
 
     public List<User> searchStaffs(String searchQuery) {
-        String sql = "SELECT * FROM users WHERE role = 'admin' AND (name LIKE ? OR email LIKE ?)";
+        String sql = "SELECT * FROM users WHERE role = 'staff' AND (name LIKE ? OR email LIKE ?)";
 
         try (Connection connection = DBConnection.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -105,7 +105,7 @@ public class StaffDao {
     }
 
     public int getTotalActiveStaffCount() {
-        String sql = "SELECT COUNT(*) AS total FROM users WHERE role = 'admin' AND status = 'active'";
+        String sql = "SELECT COUNT(*) AS total FROM users WHERE role = 'staff' AND status = 'active'";
 
         try (Connection connection = DBConnection.getConnection()){
             var statement = connection.createStatement();
@@ -122,7 +122,7 @@ public class StaffDao {
     }
 
     public int getTotalStaffCount() {
-        String sql = "SELECT COUNT(*) AS total FROM users WHERE role = 'admin'";
+        String sql = "SELECT COUNT(*) AS total FROM users WHERE role = 'staff'";
 
         try (Connection connection = DBConnection.getConnection()){
             var statement = connection.createStatement();
@@ -139,7 +139,7 @@ public class StaffDao {
     }
 
     public int getTotalOnLeaveStaffCount() {
-        String sql = "SELECT COUNT(*) AS total FROM users WHERE role = 'admin' AND status = 'leave'";
+        String sql = "SELECT COUNT(*) AS total FROM users WHERE role = 'staff' AND status = 'leave'";
 
         try (Connection connection = DBConnection.getConnection()){
             var statement = connection.createStatement();
@@ -209,10 +209,10 @@ public class StaffDao {
         }
     }
 
-    // Delete a staff member. The role='admin' guard means this endpoint can only
+    // Delete a staff member. The role='staff' guard means this endpoint can only
     // ever delete staff, never a customer, even if someone passes a customer's id.
     public boolean deleteStaff(int id) {
-        String sql = "DELETE FROM users WHERE id = ? AND role = 'admin'";
+        String sql = "DELETE FROM users WHERE id = ? AND role = 'staff'";
 
         try (Connection connection = DBConnection.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -225,7 +225,7 @@ public class StaffDao {
     }
 
     public User getStaffById(int id) {
-        String sql = "SELECT * FROM users WHERE id = ? AND role = 'admin'";
+        String sql = "SELECT * FROM users WHERE id = ? AND role = 'staff'";
 
         try (Connection connection = DBConnection.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {

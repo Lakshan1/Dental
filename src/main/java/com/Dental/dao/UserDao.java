@@ -13,7 +13,7 @@ public class UserDao {
     // Only staff roles can log in - dentists (doctor) and patients cannot,
     // so they are excluded here even though they exist in the users table.
     public User getUserByEmail(String email) {
-        String sql = "SELECT * FROM users WHERE email = ? AND role IN ('admin', 'superadmin')";
+        String sql = "SELECT * FROM users WHERE email = ? AND role IN ('staff', 'admin')";
 
         // Database connection and query execution logic
         try (Connection connection = DBConnection.getConnection();

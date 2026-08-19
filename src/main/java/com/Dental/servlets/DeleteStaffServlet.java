@@ -27,7 +27,7 @@ public class DeleteStaffServlet extends HttpServlet {
             return;
         }
 
-        new StaffDao().deleteStaff(id);   // role='admin' guard is in the DAO
+        new StaffDao().deleteStaff(id);   // role='staff' guard is in the DAO
         response.sendRedirect(request.getContextPath() + "/staffs");
     }
 }
