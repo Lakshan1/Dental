@@ -1,3 +1,4 @@
+com/Dental/servlets/PatientLookupServlet.class
 com/Dental/model/Patient.class
 com/Dental/servlets/DentistsServlet.class
 com/Dental/model/Appointment.class

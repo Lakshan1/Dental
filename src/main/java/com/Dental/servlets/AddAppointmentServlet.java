@@ -9,6 +9,7 @@ import com.Dental.model.Appointment;
 import com.Dental.model.Patient;
 import com.Dental.util.AppointmentValidator;
 import com.Dental.util.DentistValidator;
+import com.Dental.util.StaffValidator;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -23,7 +24,7 @@ public class AddAppointmentServlet extends HttpServlet {
     private final DentistDao dentistDao = new DentistDao();
     private final AppointmentDao appointmentDao = new AppointmentDao();
 
-    // GET -> show the booking form (with dropdowns of patients + dentists)
+    // GET -> show the booking form (dentist dropdown; patient is looked up by contact number)
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -31,18 +32,17 @@ public class AddAppointmentServlet extends HttpServlet {
         request.getRequestDispatcher("/WEB-INF/views/appointment-form.jsp").forward(request, response);
     }
 
-    // POST -> create the patient (if new), then create the appointment
+    // POST -> reuse the matched patient, or create a new one, then create the appointment.
+    // Which one happens is decided by whether "patientId" (a hidden field set by the
+    // contact-number lookup in the browser) came through filled in or blank.
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        // "new" = create a new patient; anything else = an existing patient was picked
-        boolean isNewPatient = "new".equals(request.getParameter("patientMode"));
-
         String patientId     = request.getParameter("patientId");
+        String contactNumber = trim(request.getParameter("contactNumber"));
         String newName       = trim(request.getParameter("newPatientName"));
         String newAddress    = trim(request.getParameter("newPatientAddress"));
-        String newContact    = trim(request.getParameter("newPatientContact"));
 
         String dentistId     = request.getParameter("dentistId");
         String treatmentType = trim(request.getParameter("treatmentType"));
@@ -51,8 +51,9 @@ public class AddAppointmentServlet extends HttpServlet {
         String status        = trim(request.getParameter("status"));
 
         // validate
-        String error = AppointmentValidator.validate(isNewPatient, patientId, newName,
-                dentistId, treatmentType, date, time, status);
+        // enforceFuture = true: a new booking can't be dated/timed in the past.
+        String error = AppointmentValidator.validate(patientId, newName, contactNumber,
+                dentistId, treatmentType, date, time, status, true);
         if (error != null) {
             loadFormData(request);
             request.setAttribute("error", error);
@@ -68,12 +69,13 @@ public class AddAppointmentServlet extends HttpServlet {
             return;
         }
 
-        // resolve the patient id: create a new patient, or use the selected one
+        // resolve the patient id: reuse the matched patient, or create a new one
+        boolean isExistingPatient = !StaffValidator.isBlank(patientId);
         int resolvedPatientId;
-        if (isNewPatient) {
-            resolvedPatientId = patientDao.addPatient(new Patient(0, newName, newAddress, newContact));
-        } else {
+        if (isExistingPatient) {
             resolvedPatientId = DentistValidator.toInt(patientId);
+        } else {
+            resolvedPatientId = patientDao.addPatient(new Patient(0, newName, newAddress, contactNumber));
         }
         if (resolvedPatientId <= 0) {
             loadFormData(request);
@@ -100,9 +102,8 @@ public class AddAppointmentServlet extends HttpServlet {
         }
     }
 
-    // Load the dropdown data the form needs (patients + dentists).
+    // Load the dropdown data the form needs (dentists - patients are looked up live by contact number).
     private void loadFormData(HttpServletRequest request) {
-        request.setAttribute("patients", patientDao.getAllPatients());
         request.setAttribute("dentists", dentistDao.getAllDentists());
     }
 

@@ -33,6 +33,7 @@
 /Users/admin/Desktop/Course/Advanced Programming/Dental/src/main/java/com/Dental/servlets/LoginServlet.java
 /Users/admin/Desktop/Course/Advanced Programming/Dental/src/main/java/com/Dental/servlets/LogoutServlet.java
 /Users/admin/Desktop/Course/Advanced Programming/Dental/src/main/java/com/Dental/servlets/PatientDetailServlet.java
+/Users/admin/Desktop/Course/Advanced Programming/Dental/src/main/java/com/Dental/servlets/PatientLookupServlet.java
 /Users/admin/Desktop/Course/Advanced Programming/Dental/src/main/java/com/Dental/servlets/PatientsServlet.java
 /Users/admin/Desktop/Course/Advanced Programming/Dental/src/main/java/com/Dental/servlets/StaffsServlet.java
 /Users/admin/Desktop/Course/Advanced Programming/Dental/src/main/java/com/Dental/util/AppointmentValidator.java

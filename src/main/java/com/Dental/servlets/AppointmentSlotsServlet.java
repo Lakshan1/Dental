@@ -54,6 +54,13 @@ public class AppointmentSlotsServlet extends HttpServlet {
         try { excludeId = Integer.parseInt(request.getParameter("excludeId")); } catch (Exception ignored) {}
         slots.removeAll(appointmentDao.getBookedTimes(dentistId, date, excludeId));
 
+        // For a NEW booking (no excludeId), also hide any slot that has already
+        // passed today. Skipped when editing so an existing today's-appointment
+        // doesn't lose its own (now past) time slot from the dropdown.
+        if (excludeId == 0) {
+            slots = SlotService.removePastForToday(slots, date);
+        }
+
         // write a simple JSON array of strings
         StringBuilder json = new StringBuilder("[");
         for (int i = 0; i < slots.size(); i++) {

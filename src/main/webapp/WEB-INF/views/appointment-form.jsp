@@ -30,55 +30,39 @@
 
         <div class="max-w-2xl">
           <h2 class="text-2xl font-bold text-slate-800 mb-1">New Appointment</h2>
-          <p class="text-sm text-slate-400 mb-6">Pick an existing patient or add a new one, then fill the visit details.</p>
+          <p class="text-sm text-slate-400 mb-6">Enter the patient's contact number - we'll find their record automatically, or let you add a new patient.</p>
 
           <c:if test="${not empty error}">
             <div class="mb-4 px-4 py-3 rounded-lg bg-rose-50 border border-rose-100 text-sm text-rose-700">${error}</div>
           </c:if>
 
-          <%-- default to "new" when there are no patients yet, else "existing" --%>
-          <c:set var="mode" value="${empty param.patientMode ? (empty patients ? 'new' : 'existing') : param.patientMode}" />
-
           <form action="${pageContext.request.contextPath}/appointments/add" method="post"
                 class="bg-white rounded-xl border border-gray-200 p-6 space-y-5">
 
-            <%-- ===== Patient: existing or new ===== --%>
+            <%-- ===== Patient: auto-detected from the contact number ===== --%>
             <div>
-              <label class="block text-sm font-medium text-slate-700 mb-2">Patient</label>
-              <div class="flex items-center gap-6 mb-3">
-                <label class="flex items-center gap-2 text-sm">
-                  <input type="radio" name="patientMode" value="existing" onchange="togglePatient()"
-                         ${mode == 'existing' ? 'checked' : ''}/> Existing patient
-                </label>
-                <label class="flex items-center gap-2 text-sm">
-                  <input type="radio" name="patientMode" value="new" onchange="togglePatient()"
-                         ${mode == 'new' ? 'checked' : ''}/> New patient
-                </label>
+              <label class="block text-sm font-medium text-slate-700 mb-1">Patient Contact Number</label>
+              <input type="text" id="contactNumber" name="contactNumber" value="${param.contactNumber}" required
+                     placeholder="e.g. 0771234567" oninput="onContactInput()"
+                     class="w-full px-3 py-2.5 text-sm rounded-lg border border-gray-300 focus:border-blue-600 focus:ring-1 focus:ring-blue-600 outline-none"/>
+              <p id="patientStatus" class="text-xs text-slate-400 mt-1"></p>
+
+              <%-- Hidden once a match is found; the servlet uses this to reuse that patient. --%>
+              <input type="hidden" id="patientId" name="patientId" value="${param.patientId}"/>
+
+              <%-- Shown when an existing patient is found for the typed number. --%>
+              <div id="foundPatientCard" class="mt-3 p-3 rounded-lg bg-emerald-50 border border-emerald-100 text-sm text-emerald-700" style="display:none">
+                <span id="foundPatientText"></span>
               </div>
 
-              <%-- Existing patient dropdown --%>
-              <div id="existingPatient">
-                <select name="patientId"
-                        class="w-full px-3 py-2.5 text-sm rounded-lg border border-gray-300 bg-white focus:border-blue-600 focus:ring-1 focus:ring-blue-600 outline-none">
-                  <option value="">-- Select a patient --</option>
-                  <c:forEach var="p" items="${patients}">
-                    <option value="${p.id}" ${param.patientId == p.id ? 'selected' : ''}>${p.name} (${p.contactNumber})</option>
-                  </c:forEach>
-                </select>
-              </div>
-
-              <%-- New patient fields --%>
-              <div id="newPatient" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <%-- Shown when no patient matches - fill these in to create one. --%>
+              <div id="newPatientFields" class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-3" style="display:none">
                 <div class="sm:col-span-2">
-                  <input type="text" name="newPatientName" value="${param.newPatientName}" placeholder="Patient name"
+                  <input type="text" id="newPatientName" name="newPatientName" value="${param.newPatientName}" placeholder="Patient name"
                          class="w-full px-3 py-2.5 text-sm rounded-lg border border-gray-300 focus:border-blue-600 focus:ring-1 focus:ring-blue-600 outline-none"/>
                 </div>
                 <div class="sm:col-span-2">
                   <input type="text" name="newPatientAddress" value="${param.newPatientAddress}" placeholder="Address"
-                         class="w-full px-3 py-2.5 text-sm rounded-lg border border-gray-300 focus:border-blue-600 focus:ring-1 focus:ring-blue-600 outline-none"/>
-                </div>
-                <div class="sm:col-span-2">
-                  <input type="text" name="newPatientContact" value="${param.newPatientContact}" placeholder="Contact number"
                          class="w-full px-3 py-2.5 text-sm rounded-lg border border-gray-300 focus:border-blue-600 focus:ring-1 focus:ring-blue-600 outline-none"/>
                 </div>
               </div>
@@ -108,7 +92,9 @@
               </div>
               <div>
                 <label class="block text-sm font-medium text-slate-700 mb-1">Date</label>
+                <%-- min = today, so the date picker itself won't offer past dates. --%>
                 <input type="date" name="appointmentDate" value="${param.appointmentDate}" onchange="loadSlots()"
+                       min="<%= java.time.LocalDate.now() %>"
                        class="w-full px-3 py-2.5 text-sm rounded-lg border border-gray-300 focus:border-blue-600 focus:ring-1 focus:ring-blue-600 outline-none"/>
               </div>
               <div>
@@ -144,11 +130,52 @@
   </div>
 
   <script>
-    // Show either the existing-patient dropdown or the new-patient fields.
-    function togglePatient() {
-      var isNew = document.querySelector('input[name="patientMode"]:checked').value === 'new';
-      document.getElementById('newPatient').style.display = isNew ? 'grid' : 'none';
-      document.getElementById('existingPatient').style.display = isNew ? 'none' : 'block';
+    // Debounce the contact-number lookup so it fires ~400ms after typing stops,
+    // not on every single keystroke.
+    var contactLookupTimer;
+    function onContactInput() {
+      clearTimeout(contactLookupTimer);
+      contactLookupTimer = setTimeout(lookupPatient, 400);
+    }
+
+    // Ask the server whether a patient with this contact number already exists.
+    // Found  -> hide the new-patient fields, show their name/address, reuse their id.
+    // Not found -> show the new-patient fields (name + address) to create one.
+    function lookupPatient() {
+      var contact = document.getElementById('contactNumber').value.trim();
+      var statusEl = document.getElementById('patientStatus');
+      var patientIdInput = document.getElementById('patientId');
+      var newFields = document.getElementById('newPatientFields');
+      var foundCard = document.getElementById('foundPatientCard');
+      var foundText = document.getElementById('foundPatientText');
+
+      if (!contact) {
+        statusEl.textContent = '';
+        patientIdInput.value = '';
+        newFields.style.display = 'none';
+        foundCard.style.display = 'none';
+        return;
+      }
+
+      statusEl.textContent = 'Checking...';
+
+      var url = '${pageContext.request.contextPath}/patients/lookup?contact=' + encodeURIComponent(contact);
+      fetch(url).then(function (r) { return r.json(); }).then(function (data) {
+        if (data.found) {
+          patientIdInput.value = data.id;
+          newFields.style.display = 'none';
+          foundCard.style.display = 'block';
+          foundText.textContent = 'Existing patient found: ' + data.name + (data.address ? ' (' + data.address + ')' : '');
+          statusEl.textContent = '';
+        } else {
+          patientIdInput.value = '';
+          foundCard.style.display = 'none';
+          newFields.style.display = 'grid';
+          statusEl.textContent = 'No existing patient with this number - fill in their details below.';
+        }
+      }).catch(function () {
+        statusEl.textContent = '';
+      });
     }
 
     // Ask the server for free slots for the chosen dentist + date, then fill the
@@ -187,8 +214,10 @@
     }
 
     window.addEventListener('DOMContentLoaded', function () {
-      togglePatient();
-      loadSlots();   // if dentist+date survived an error re-show, refill the times
+      // If a contact number / dentist+date survived an error re-show, re-run
+      // the lookups immediately so the UI matches what was submitted.
+      if (document.getElementById('contactNumber').value.trim()) lookupPatient();
+      loadSlots();
     });
   </script>
 </body>

@@ -70,8 +70,10 @@ public class EditAppointmentServlet extends HttpServlet {
         String status        = trim(request.getParameter("status"));
 
         // the patient stays the same on edit, so validate against the existing patient id
-        String error = AppointmentValidator.validate(false, String.valueOf(existing.getPatientId()), null,
-                dentistId, treatmentType, date, time, status);
+        // enforceFuture = false: editing shouldn't be blocked just because the
+        // appointment (or its status update) is for a date/time that's already passed.
+        String error = AppointmentValidator.validate(String.valueOf(existing.getPatientId()), null, null,
+                dentistId, treatmentType, date, time, status, false);
         // double-booking, ignoring THIS appointment's own slot
         if (error == null && appointmentDao.isSlotTaken(DentistValidator.toInt(dentistId), date, time, id)) {
             error = "That time slot is already booked. Please pick another.";

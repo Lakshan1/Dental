@@ -42,6 +42,25 @@ public class PatientDao {
         return list;
     }
 
+    // Look up a patient by their exact contact number (used to auto-detect an
+    // existing patient while booking an appointment, instead of a manual picker).
+    public Patient findByContact(String contactNumber) {
+        String sql = "SELECT * FROM patients WHERE contact_number = ? LIMIT 1";
+        try (Connection c = DBConnection.getConnection();
+             PreparedStatement ps = c.prepareStatement(sql)) {
+            ps.setString(1, contactNumber);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return new Patient(rs.getInt("id"), rs.getString("name"),
+                            rs.getString("address"), rs.getString("contact_number"));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public Patient getPatientById(int id) {
         String sql = "SELECT * FROM patients WHERE id = ?";
         try (Connection c = DBConnection.getConnection();

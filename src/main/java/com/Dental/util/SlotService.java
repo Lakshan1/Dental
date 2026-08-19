@@ -47,6 +47,22 @@ public class SlotService {
         return slots;
     }
 
+    // Remove slots that have already passed, but only if "date" is today - a
+    // future date's slots are all still bookable no matter the time of day.
+    public static List<String> removePastForToday(List<String> slots, String date) {
+        try {
+            if (!LocalDate.parse(date).isEqual(LocalDate.now())) return slots;   // not today, nothing to remove
+            LocalTime now = LocalTime.now();
+            List<String> future = new ArrayList<>();
+            for (String s : slots) {
+                if (!LocalTime.parse(s).isBefore(now)) future.add(s);
+            }
+            return future;
+        } catch (Exception e) {
+            return slots;
+        }
+    }
+
     private static boolean isBlank(String s) {
         return s == null || s.trim().isEmpty();
     }
