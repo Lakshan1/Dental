@@ -56,6 +56,13 @@ public class LoginServlet extends HttpServlet {
                 return;
             }
 
+            // Only an active staff account may log in - "leave" and "restricted" are blocked.
+            if (!"active".equals(user.getStatus())) {
+                request.setAttribute("error", "Your account is not active. Please contact the administrator.");
+                request.getRequestDispatcher("login.jsp").forward(request, response);
+                return;
+            }
+
             HttpSession session = request.getSession(); // Create a new session for the user
             session.setAttribute("user", user); // Store the user object in the session
 
