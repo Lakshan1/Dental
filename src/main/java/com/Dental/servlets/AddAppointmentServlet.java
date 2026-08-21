@@ -80,6 +80,17 @@ public class AddAppointmentServlet extends HttpServlet {
 
         // resolve the patient id: reuse the matched patient, or create a new one
         boolean isExistingPatient = !StaffValidator.isBlank(patientId);
+
+        // Same-patient guard: a brand-new patient can't already have a clashing
+        // appointment, so this only matters when reusing an existing patient -
+        // stops one patient being booked with two different dentists at once.
+        if (isExistingPatient && appointmentDao.isPatientBusy(DentistValidator.toInt(patientId), date, time)) {
+            loadFormData(request);
+            request.setAttribute("error", "This patient already has an appointment at that time.");
+            request.getRequestDispatcher("/WEB-INF/views/appointment-form.jsp").forward(request, response);
+            return;
+        }
+
         int resolvedPatientId;
         if (isExistingPatient) {
             resolvedPatientId = DentistValidator.toInt(patientId);

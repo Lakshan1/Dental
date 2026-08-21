@@ -78,6 +78,11 @@ public class EditAppointmentServlet extends HttpServlet {
         if (error == null && appointmentDao.isSlotTaken(DentistValidator.toInt(dentistId), date, time, id)) {
             error = "That time slot is already booked. Please pick another.";
         }
+        // same-patient guard: this patient can't have another appointment at
+        // the new date+time either (with a different dentist), ignoring itself.
+        if (error == null && appointmentDao.isPatientBusy(existing.getPatientId(), date, time, id)) {
+            error = "This patient already has another appointment at that time.";
+        }
         if (error != null) {
             request.setAttribute("appointment", appointmentDao.getAppointmentById(id));
             request.setAttribute("dentists", dentistDao.getAllDentists());

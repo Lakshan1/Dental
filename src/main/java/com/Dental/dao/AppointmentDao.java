@@ -189,6 +189,32 @@ public class AppointmentDao {
         }
     }
 
+    // True if this patient already has an appointment at this date+time, with
+    // ANY dentist. A patient can't be in two places at once, so this stops one
+    // patient being double-booked even when the two appointments are with
+    // different dentists (isSlotTaken alone only catches one dentist's clashes).
+    public boolean isPatientBusy(int patientId, String date, String time) {
+        return isPatientBusy(patientId, date, time, 0);
+    }
+
+    // Same guard, but ignoring one appointment id (for edit).
+    public boolean isPatientBusy(int patientId, String date, String time, int excludeId) {
+        String sql = "SELECT 1 FROM appointments "
+                   + "WHERE patient_id = ? AND appointment_date = ? AND appointment_time = ? "
+                   + "AND status <> 'cancelled' AND id <> ?";
+        try (Connection c = DBConnection.getConnection();
+             PreparedStatement ps = c.prepareStatement(sql)) {
+            ps.setInt(1, patientId);
+            ps.setString(2, date);
+            ps.setString(3, time);
+            ps.setInt(4, excludeId);
+            return ps.executeQuery().next();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     // Update an appointment.
     public boolean updateAppointment(Appointment a) {
         String sql = "UPDATE appointments SET dentist_id = ?, treatment_type = ?, "
