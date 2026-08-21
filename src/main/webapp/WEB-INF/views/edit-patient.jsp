@@ -41,6 +41,11 @@
             <input type="hidden" name="id" value="${patient.id}"/>
 
             <div>
+              <label class="block text-sm font-medium text-slate-700 mb-1">NIC</label>
+              <input type="text" name="nic" value="${patient.nic}" required
+                     class="w-full px-3 py-2.5 text-sm rounded-lg border border-gray-300 focus:border-blue-600 focus:ring-1 focus:ring-blue-600 outline-none"/>
+            </div>
+            <div>
               <label class="block text-sm font-medium text-slate-700 mb-1">Name</label>
               <input type="text" name="name" value="${patient.name}" required
                      class="w-full px-3 py-2.5 text-sm rounded-lg border border-gray-300 focus:border-blue-600 focus:ring-1 focus:ring-blue-600 outline-none"/>

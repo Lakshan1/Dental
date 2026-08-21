@@ -24,7 +24,7 @@ public class AddAppointmentServlet extends HttpServlet {
     private final DentistDao dentistDao = new DentistDao();
     private final AppointmentDao appointmentDao = new AppointmentDao();
 
-    // GET -> show the booking form (dentist dropdown; patient is looked up by contact number)
+    // GET -> show the booking form (dentist dropdown; patient is looked up by NIC)
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -34,26 +34,35 @@ public class AddAppointmentServlet extends HttpServlet {
 
     // POST -> reuse the matched patient, or create a new one, then create the appointment.
     // Which one happens is decided by whether "patientId" (a hidden field set by the
-    // contact-number lookup in the browser) came through filled in or blank.
+    // NIC lookup in the browser) came through filled in or blank.
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        String patientId     = request.getParameter("patientId");
-        String contactNumber = trim(request.getParameter("contactNumber"));
-        String newName       = trim(request.getParameter("newPatientName"));
-        String newAddress    = trim(request.getParameter("newPatientAddress"));
+        String patientId  = request.getParameter("patientId");
+        String nic         = trim(request.getParameter("nic"));
+        String newName     = trim(request.getParameter("newPatientName"));
+        String newAddress  = trim(request.getParameter("newPatientAddress"));
+        String newContact  = trim(request.getParameter("newPatientContact"));
 
         String dentistId     = request.getParameter("dentistId");
         String treatmentType = trim(request.getParameter("treatmentType"));
         String date          = request.getParameter("appointmentDate");
         String time          = request.getParameter("appointmentTime");
-        String status        = trim(request.getParameter("status"));
+
+        // Status isn't asked for on the New Appointment form - every new
+        // booking starts out "scheduled".
+        String status = "scheduled";
 
         // validate
         // enforceFuture = true: a new booking can't be dated/timed in the past.
-        String error = AppointmentValidator.validate(patientId, newName, contactNumber,
+        String error = AppointmentValidator.validate(patientId, newName, nic,
                 dentistId, treatmentType, date, time, status, true);
+        if (error == null && StaffValidator.isBlank(patientId) && patientDao.checkIfNicExists(nic)) {
+            // Shouldn't normally happen (the lookup would have matched them), but
+            // guards against a race or a bypassed lookup creating a duplicate NIC.
+            error = "A patient with that NIC already exists.";
+        }
         if (error != null) {
             loadFormData(request);
             request.setAttribute("error", error);
@@ -75,7 +84,7 @@ public class AddAppointmentServlet extends HttpServlet {
         if (isExistingPatient) {
             resolvedPatientId = DentistValidator.toInt(patientId);
         } else {
-            resolvedPatientId = patientDao.addPatient(new Patient(0, newName, newAddress, contactNumber));
+            resolvedPatientId = patientDao.addPatient(new Patient(0, nic, newName, newAddress, newContact));
         }
         if (resolvedPatientId <= 0) {
             loadFormData(request);
@@ -102,7 +111,7 @@ public class AddAppointmentServlet extends HttpServlet {
         }
     }
 
-    // Load the dropdown data the form needs (dentists - patients are looked up live by contact number).
+    // Load the dropdown data the form needs (dentists - patients are looked up live by NIC).
     private void loadFormData(HttpServletRequest request) {
         request.setAttribute("dentists", dentistDao.getAllDentists());
     }

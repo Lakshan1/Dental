@@ -52,6 +52,7 @@
             <h3 class="font-semibold text-slate-800 mb-3">Details</h3>
             <dl class="grid grid-cols-2 gap-y-2 text-sm">
               <dt class="text-slate-400">Name</dt><dd class="text-slate-700 font-medium">${patient.name}</dd>
+              <dt class="text-slate-400">NIC</dt><dd class="text-slate-700">${empty patient.nic ? '-' : patient.nic}</dd>
               <dt class="text-slate-400">Contact</dt><dd class="text-slate-700">${empty patient.contactNumber ? '-' : patient.contactNumber}</dd>
               <dt class="text-slate-400">Address</dt><dd class="text-slate-700">${empty patient.address ? '-' : patient.address}</dd>
             </dl>

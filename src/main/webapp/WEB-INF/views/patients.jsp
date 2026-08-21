@@ -38,6 +38,7 @@
               <thead>
                 <tr class="text-left text-slate-400 border-b border-gray-100">
                   <th class="px-5 py-3 font-medium">Name</th>
+                  <th class="px-5 py-3 font-medium">NIC</th>
                   <th class="px-5 py-3 font-medium">Contact</th>
                   <th class="px-5 py-3 font-medium">Address</th>
                 </tr>
@@ -54,13 +55,14 @@
                         <span class="font-medium text-slate-700">${p.name}</span>
                       </div>
                     </td>
+                    <td class="px-5 py-3 text-slate-500">${empty p.nic ? '-' : p.nic}</td>
                     <td class="px-5 py-3 text-slate-500">${empty p.contactNumber ? '-' : p.contactNumber}</td>
                     <td class="px-5 py-3 text-slate-500">${empty p.address ? '-' : p.address}</td>
                   </tr>
                 </c:forEach>
 
                 <c:if test="${empty patients}">
-                  <tr><td colspan="3" class="px-5 py-8 text-center text-slate-400">No patients yet. Book an appointment to add one.</td></tr>
+                  <tr><td colspan="4" class="px-5 py-8 text-center text-slate-400">No patients yet. Book an appointment to add one.</td></tr>
                 </c:if>
 
               </tbody>

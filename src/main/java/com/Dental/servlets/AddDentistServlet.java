@@ -37,7 +37,10 @@ public class AddDentistServlet extends HttpServlet {
         String email    = trim(request.getParameter("email"));
         String feeText  = request.getParameter("consultationFee");
         String slotText = request.getParameter("slotMinutes");
-        String status   = trim(request.getParameter("status"));
+
+        // Status isn't asked for on the Add Dentist form - every dentist
+        // created here starts out "active".
+        String status = "active";
 
         DentistDao dentistDao = new DentistDao();
 
@@ -59,6 +62,7 @@ public class AddDentistServlet extends HttpServlet {
         // so passwordHash is stored empty.
         Dentist dentist = buildFromRequest(request, 0);
         dentist.setPasswordHash("");
+        dentist.setStatus(status);   // buildFromRequest read this as null - the field isn't on the Add form
 
         if (dentistDao.addDentist(dentist)) {
             response.sendRedirect(request.getContextPath() + "/dentists");

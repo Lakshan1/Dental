@@ -12,8 +12,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 // Small JSON endpoint the appointment-booking form calls (via fetch) as the
-// staff member types a contact number. Tells the form whether a patient with
-// that number already exists, so it can show them instead of a blank form.
+// staff member types a NIC. Tells the form whether a patient with that NIC
+// already exists, so it can show them instead of a blank form. NIC is used
+// (not phone) because several patients can share one phone number.
 @WebServlet("/patients/lookup")
 public class PatientLookupServlet extends HttpServlet {
 
@@ -24,13 +25,13 @@ public class PatientLookupServlet extends HttpServlet {
         response.setContentType("application/json");
         PrintWriter out = response.getWriter();
 
-        String contact = request.getParameter("contact");
-        if (contact == null || contact.trim().isEmpty()) {
+        String nic = request.getParameter("nic");
+        if (nic == null || nic.trim().isEmpty()) {
             out.print("{\"found\":false}");
             return;
         }
 
-        Patient patient = patientDao.findByContact(contact.trim());
+        Patient patient = patientDao.findByNic(nic.trim());
         if (patient == null) {
             out.print("{\"found\":false}");
             return;

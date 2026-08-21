@@ -49,19 +49,32 @@ public class EditPatientServlet extends HttpServlet {
             return;
         }
 
+        Patient existing = patientDao.getPatientById(id);
+        if (existing == null) {
+            response.sendRedirect(request.getContextPath() + "/patients");
+            return;
+        }
+
+        String nic     = trim(request.getParameter("nic"));
         String name    = trim(request.getParameter("name"));
         String address = trim(request.getParameter("address"));
         String contact = trim(request.getParameter("contact"));
 
-        String error = PatientValidator.validate(name, contact);
+        String error = PatientValidator.validate(nic, name, contact);
+        if (error == null
+                // Unique NIC, but allow keeping the SAME NIC (exclude self).
+                && !nic.equalsIgnoreCase(existing.getNic())
+                && patientDao.checkIfNicExists(nic)) {
+            error = "Another patient already uses that NIC.";
+        }
         if (error != null) {
-            request.setAttribute("patient", new Patient(id, name, address, contact));
+            request.setAttribute("patient", new Patient(id, nic, name, address, contact));
             request.setAttribute("error", error);
             request.getRequestDispatcher("/WEB-INF/views/edit-patient.jsp").forward(request, response);
             return;
         }
 
-        Patient patient = new Patient(id, name, address, contact);
+        Patient patient = new Patient(id, nic, name, address, contact);
         if (patientDao.updatePatient(patient)) {
             response.sendRedirect(request.getContextPath() + "/patients/view?id=" + id);
         } else {

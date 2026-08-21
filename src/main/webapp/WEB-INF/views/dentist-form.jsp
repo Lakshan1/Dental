@@ -86,15 +86,19 @@
               </div>
             </div>
 
-            <div>
-              <label class="block text-sm font-medium text-slate-700 mb-1">Status</label>
-              <select name="status"
-                      class="w-full sm:w-1/3 px-3 py-2.5 text-sm rounded-lg border border-gray-300 bg-white focus:border-blue-600 focus:ring-1 focus:ring-blue-600 outline-none">
-                <option value="active"     ${dentist.status == 'active' ? 'selected' : ''}>Active</option>
-                <option value="leave"      ${dentist.status == 'leave' ? 'selected' : ''}>On Leave</option>
-                <option value="restricted" ${dentist.status == 'restricted' ? 'selected' : ''}>Restricted</option>
-              </select>
-            </div>
+            <%-- Status isn't asked for on Add - every dentist starts "active".
+                 It becomes editable once the dentist exists. --%>
+            <c:if test="${mode == 'Edit'}">
+              <div>
+                <label class="block text-sm font-medium text-slate-700 mb-1">Status</label>
+                <select name="status"
+                        class="w-full sm:w-1/3 px-3 py-2.5 text-sm rounded-lg border border-gray-300 bg-white focus:border-blue-600 focus:ring-1 focus:ring-blue-600 outline-none">
+                  <option value="active"     ${dentist.status == 'active' ? 'selected' : ''}>Active</option>
+                  <option value="leave"      ${dentist.status == 'leave' ? 'selected' : ''}>On Leave</option>
+                  <option value="restricted" ${dentist.status == 'restricted' ? 'selected' : ''}>Restricted</option>
+                </select>
+              </div>
+            </c:if>
 
             <%-- ===== Weekly working hours =====
                  One start + end per day. Leave both blank to mark a day off. --%>
