@@ -85,29 +85,17 @@
                     </c:if>
                 </div>
 
-                <%-- Two-up: Role + Status --%>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-
-                <%-- Role. Your staff query filters on role='staff', so this stores
-                    the User.role value. Adjust the options to your setup. --%>
-                <div>
-                    <label for="role" class="block text-sm font-medium text-slate-700 mb-1">Role</label>
-                    <select id="role" name="role" default="${staff.role}"
-                            class="w-full px-3 py-2.5 text-sm rounded-lg border border-gray-300 bg-white focus:border-blue-600 focus:ring-1 focus:ring-blue-600 outline-none">
-                    <option value="staff" default>Staff</option>
-                    </select>
-                </div>
+                <%-- Role isn't editable - every staff record is role="staff". --%>
 
                 <%-- Status. Matches the values your table colours on. --%>
                 <div>
                     <label for="status" class="block text-sm font-medium text-slate-700 mb-1">Status</label>
                     <select id="status" name="status"
-                            class="w-full px-3 py-2.5 text-sm rounded-lg border border-gray-300 bg-white focus:border-blue-600 focus:ring-1 focus:ring-blue-600 outline-none">
+                            class="w-full sm:w-1/2 px-3 py-2.5 text-sm rounded-lg border border-gray-300 bg-white focus:border-blue-600 focus:ring-1 focus:ring-blue-600 outline-none">
                         <option value="active" <c:if test="${staff.status == 'active'}">selected</c:if>>Active</option>
                         <option value="leave" <c:if test="${staff.status == 'leave'}">selected</c:if>>On Leave</option>
                         <option value="restricted" <c:if test="${staff.status == 'restricted'}">selected</c:if>>Restricted</option>
                     </select>
-                </div>
                 </div>
 
                 <%-- ---- Buttons ---- --%>

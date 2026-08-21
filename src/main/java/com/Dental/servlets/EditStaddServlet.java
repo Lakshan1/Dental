@@ -65,9 +65,11 @@ public class EditStaddServlet extends HttpServlet {
         // Read + trim inputs.
         String name     = trim(request.getParameter("name"));
         String email    = trim(request.getParameter("email"));
-        String role     = trim(request.getParameter("role"));
         String status   = trim(request.getParameter("status"));
         String password = request.getParameter("password");   // blank = keep current
+
+        // Role isn't editable - every staff record is (and stays) role="staff".
+        String role = "staff";
 
         // Server-side validation (password optional on edit).
         String error = StaffValidator.validate(name, email, password, role, status, false);
