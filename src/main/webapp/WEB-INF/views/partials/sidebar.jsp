@@ -68,13 +68,16 @@
       </a>
     </c:if>
 
-    <%-- Help --%>
-    <a href="${pageContext.request.contextPath}/help" class="flex items-center gap-3 px-3 py-2 rounded-lg ${active == 'help' ? 'bg-blue-50 text-blue-700 font-medium' : 'text-slate-600 hover:bg-gray-100'}">
+    <%-- Help: opens the panel docked to the right (see below) instead of
+         navigating away, so you can follow a step and immediately click the
+         real button/link it's pointing at, without losing your place. --%>
+    <button type="button" id="helpNavBtn" onclick="openHelpPanel()"
+            class="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-slate-600 hover:bg-gray-100">
       <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 9.75a2.25 2.25 0 1 1 3.4 1.94c-.7.42-1.4.98-1.4 1.81v.5M12 17h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
       </svg>
       Help
-    </a>
+    </button>
   </nav>
 
   <%-- ---- Logout pinned to the bottom ----
@@ -105,3 +108,100 @@
     }
   </script>
 </aside>
+
+<%-- =========================================================================
+     HELP PANEL
+     A genuine third column docked to the right - NOT an overlay. JS moves it
+     into the page's own flex row (sidebar | main content | help), so the
+     main content visibly shrinks to make room, exactly like the sidebar does.
+
+     It stays open across page navigations (this is a normal multi-page app -
+     every click is a full page reload) by remembering open/closed and scroll
+     position in localStorage, restored on each page load. It only ever
+     closes when the X is clicked (or Escape is pressed) - never just because
+     you followed a link to another page.
+
+     Included on every page via sidebar.jsp, so Help behaves the same everywhere.
+========================================================================= --%>
+<div id="helpPanel" class="hidden shrink-0 w-96 border-l border-gray-200 bg-white flex-col overflow-hidden">
+
+  <%-- Panel header: title + close button --%>
+  <div class="flex items-center justify-between px-5 py-4 border-b border-gray-200 shrink-0">
+    <div>
+      <h2 class="font-semibold text-slate-800">Help &amp; Instructions</h2>
+      <p class="text-xs text-slate-400">Stays open as you navigate - close with the X</p>
+    </div>
+    <button type="button" onclick="closeHelpPanel()" aria-label="Close help"
+            class="p-1.5 rounded-lg text-slate-400 hover:bg-gray-100 hover:text-slate-600">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/>
+      </svg>
+    </button>
+  </div>
+
+  <%-- Panel body: scrolls independently of the main content beside it --%>
+  <div id="helpPanelBody" class="flex-1 overflow-y-auto p-5">
+    <%@ include file="/WEB-INF/views/partials/help-content.jsp" %>
+  </div>
+</div>
+
+<script>
+  // Make the Help nav button look "active" (or not) - shared by open/close/restore.
+  function setHelpNavActive(isActive) {
+    var btn = document.getElementById('helpNavBtn');
+    if (!btn) return;
+    if (isActive) { btn.classList.add('bg-blue-50', 'text-blue-700', 'font-medium'); btn.classList.remove('text-slate-600'); }
+    else { btn.classList.remove('bg-blue-50', 'text-blue-700', 'font-medium'); btn.classList.add('text-slate-600'); }
+  }
+
+  // Show/hide only - no localStorage write. Used both by the real
+  // open/close actions below AND by the on-load restore (which must NOT
+  // reset the remembered scroll position back to zero).
+  function showHelpPanel() {
+    var panel = document.getElementById('helpPanel');
+    panel.classList.remove('hidden');
+    panel.classList.add('flex');
+    setHelpNavActive(true);
+  }
+  function hideHelpPanel() {
+    var panel = document.getElementById('helpPanel');
+    panel.classList.add('hidden');
+    panel.classList.remove('flex');
+    setHelpNavActive(false);
+  }
+
+  // The actual button/X actions: change the visible state AND remember it.
+  function openHelpPanel() {
+    showHelpPanel();
+    localStorage.setItem('helpPanelOpen', 'true');
+  }
+  function closeHelpPanel() {
+    hideHelpPanel();
+    localStorage.setItem('helpPanelOpen', 'false');
+  }
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') closeHelpPanel();
+  });
+
+  window.addEventListener('DOMContentLoaded', function () {
+    // Move the panel to be the LAST child of the page's own sidebar+content
+    // flex row, so it becomes a real third column (not just floating on top).
+    var outerRow = document.querySelector('.flex.h-screen.overflow-hidden');
+    var panel = document.getElementById('helpPanel');
+    if (outerRow && panel) outerRow.appendChild(panel);
+
+    // Restore open/closed + scroll position from the last page, if any.
+    if (localStorage.getItem('helpPanelOpen') === 'true') {
+      showHelpPanel();
+      var savedScroll = localStorage.getItem('helpPanelScroll');
+      if (savedScroll) document.getElementById('helpPanelBody').scrollTop = parseInt(savedScroll, 10);
+    }
+
+    // Remember scroll position as the user reads, so the next page picks up
+    // right where they left off instead of snapping back to the top.
+    document.getElementById('helpPanelBody').addEventListener('scroll', function () {
+      localStorage.setItem('helpPanelScroll', this.scrollTop);
+    });
+  });
+</script>

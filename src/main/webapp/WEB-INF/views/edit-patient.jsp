@@ -40,10 +40,13 @@
 
             <input type="hidden" name="id" value="${patient.id}"/>
 
+            <%-- NIC is the patient's identity - set once when they're first
+                 created and not editable afterwards. Shown read-only for reference. --%>
             <div>
               <label class="block text-sm font-medium text-slate-700 mb-1">NIC</label>
-              <input type="text" name="nic" value="${patient.nic}" required
-                     class="w-full px-3 py-2.5 text-sm rounded-lg border border-gray-300 focus:border-blue-600 focus:ring-1 focus:ring-blue-600 outline-none"/>
+              <div class="w-full px-3 py-2.5 text-sm rounded-lg border border-gray-200 bg-gray-50 text-slate-600">
+                ${empty patient.nic ? '-' : patient.nic}
+              </div>
             </div>
             <div>
               <label class="block text-sm font-medium text-slate-700 mb-1">Name</label>

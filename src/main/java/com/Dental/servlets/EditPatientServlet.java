@@ -55,18 +55,15 @@ public class EditPatientServlet extends HttpServlet {
             return;
         }
 
-        String nic     = trim(request.getParameter("nic"));
         String name    = trim(request.getParameter("name"));
         String address = trim(request.getParameter("address"));
         String contact = trim(request.getParameter("contact"));
 
-        String error = PatientValidator.validate(nic, name, contact);
-        if (error == null
-                // Unique NIC, but allow keeping the SAME NIC (exclude self).
-                && !nic.equalsIgnoreCase(existing.getNic())
-                && patientDao.checkIfNicExists(nic)) {
-            error = "Another patient already uses that NIC.";
-        }
+        // NIC isn't editable - always keep the patient's existing NIC, no
+        // matter what (if anything) came through in the request.
+        String nic = existing.getNic();
+
+        String error = PatientValidator.validate(name, contact);
         if (error != null) {
             request.setAttribute("patient", new Patient(id, nic, name, address, contact));
             request.setAttribute("error", error);

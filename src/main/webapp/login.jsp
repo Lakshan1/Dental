@@ -90,6 +90,13 @@
                      Sign in</button>
                </form>
 
+               <!-- Standalone help guide (public page, no login needed) - opens in a
+                    new tab so it doesn't interrupt filling in the form. -->
+               <p class="mt-6 text-center text-sm text-slate-500">
+                  Need help? <a href="${pageContext.request.contextPath}/help-guide.jsp" target="_blank" rel="noopener"
+                     class="font-medium text-blue-600 hover:underline">View the Help guide</a>
+               </p>
+
             </div>
          </div>
       </main>
