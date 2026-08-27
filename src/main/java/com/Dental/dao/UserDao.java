@@ -34,9 +34,15 @@ public class UserDao {
                 return user;
             } 
         } catch (SQLException e) {
-            e.printStackTrace();
+            // Deliberately NOT swallowed into a null return here: a DB connectivity
+            // problem (wrong host/creds/unreachable) must look different from "no
+            // such user", otherwise both show the same "Invalid email or password"
+            // and there's no way to tell which one you're looking at from the login
+            // page alone. Letting it propagate surfaces a 500 error page instead -
+            // a clear, immediate signal it's a DB problem, not bad credentials.
+            throw new RuntimeException("Database error while looking up user by email", e);
         }
-        return null; // Return null if the user is not found
+        return null; // Return null if the user is not found (query ran fine, no match)
     }
     
 }
