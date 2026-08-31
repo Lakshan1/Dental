@@ -75,11 +75,11 @@
                 <%-- Password (you will bcrypt-hash this before storing) --%>
                 <div>
                     <label for="password" class="block text-sm font-medium text-slate-700 mb-1">Password</label>
-                    <input type="password" id="password" name="password" minlength="6"
-                            pattern="(?=.*[A-Za-z])(?=.*\d).{6,}|^$"
+                    <input type="password" id="password" name="password" minlength="8"
+                            pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}|^$"
                             placeholder="Leave empty to keep current password, or enter new one"
                             class="w-full px-3 py-2.5 text-sm rounded-lg border border-gray-300 focus:border-blue-600 focus:ring-1 focus:ring-blue-600 outline-none"/>
-                    <p class="text-xs text-slate-400 mt-1">Leave empty to keep current password. If updating, use at least 6 characters with letters and numbers.</p>
+                    <p class="text-xs text-slate-400 mt-1">Leave empty to keep current password. If updating, use at least 8 characters with an uppercase letter, a lowercase letter, a number, and a special character.</p>
                     <c:if test="${not empty passwordError}">
                         <p class="text-xs text-rose-600 mt-1">${passwordError}</p>
                     </c:if>

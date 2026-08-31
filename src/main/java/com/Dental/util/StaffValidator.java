@@ -41,15 +41,23 @@ public class StaffValidator {
         return null; // all good
     }
 
-    /** At least 6 chars, containing at least one letter and one digit. */
+    private static final Pattern SPECIAL_CHAR = Pattern.compile("[^A-Za-z0-9]");
+
+    /**
+     * At least 8 chars, with an uppercase letter, a lowercase letter, a digit,
+     * and a special character - a login guarding real patient records needs
+     * more than "6 chars + a digit" to resist basic guessing/brute force.
+     */
     public static String validatePassword(String password) {
-        if (password == null || password.length() < 6) {
-            return "Password must be at least 6 characters.";
+        if (password == null || password.length() < 8) {
+            return "Password must be at least 8 characters.";
         }
-        boolean hasLetter = password.matches(".*[A-Za-z].*");
-        boolean hasDigit  = password.matches(".*\\d.*");
-        if (!hasLetter || !hasDigit) {
-            return "Password must include both letters and numbers.";
+        boolean hasUpper   = password.matches(".*[A-Z].*");
+        boolean hasLower   = password.matches(".*[a-z].*");
+        boolean hasDigit   = password.matches(".*\\d.*");
+        boolean hasSpecial = SPECIAL_CHAR.matcher(password).find();
+        if (!hasUpper || !hasLower || !hasDigit || !hasSpecial) {
+            return "Password must include an uppercase letter, a lowercase letter, a number, and a special character.";
         }
         return null;
     }
