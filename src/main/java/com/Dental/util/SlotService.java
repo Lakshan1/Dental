@@ -47,6 +47,12 @@ public class SlotService {
         return slots;
     }
 
+    // Is this time actually one of the bookable slots for a day with these hours?
+    // TODO: not implemented yet - stub so the new tests compile and fail.
+    public static boolean isBookableSlot(String time, String start, String end, int slotMinutes) {
+        return true;
+    }
+
     // Remove slots that have already passed, but only if "date" is today - a
     // future date's slots are all still bookable no matter the time of day.
     public static List<String> removePastForToday(List<String> slots, String date) {
