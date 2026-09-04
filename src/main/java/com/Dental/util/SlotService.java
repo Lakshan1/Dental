@@ -48,9 +48,19 @@ public class SlotService {
     }
 
     // Is this time actually one of the bookable slots for a day with these hours?
-    // TODO: not implemented yet - stub so the new tests compile and fail.
+    // The dropdown is built from generateSlots(), but a stale form or a direct
+    // POST can send anything, so the same rule is checked again here before a
+    // booking is accepted. A day with no hours set is a day off, so nothing on
+    // it is bookable.
     public static boolean isBookableSlot(String time, String start, String end, int slotMinutes) {
-        return true;
+        if (isBlank(time)) return false;
+        String hhmm;
+        try {
+            hhmm = LocalTime.parse(time.trim()).toString().substring(0, 5);
+        } catch (Exception e) {
+            return false;   // an unparseable time is never a valid slot
+        }
+        return generateSlots(start, end, slotMinutes).contains(hhmm);
     }
 
     // Remove slots that have already passed, but only if "date" is today - a

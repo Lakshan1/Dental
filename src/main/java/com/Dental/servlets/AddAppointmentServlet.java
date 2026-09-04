@@ -6,9 +6,11 @@ import com.Dental.dao.AppointmentDao;
 import com.Dental.dao.DentistDao;
 import com.Dental.dao.PatientDao;
 import com.Dental.model.Appointment;
+import com.Dental.model.Dentist;
 import com.Dental.model.Patient;
 import com.Dental.util.AppointmentValidator;
 import com.Dental.util.DentistValidator;
+import com.Dental.util.SlotService;
 import com.Dental.util.StaffValidator;
 
 import jakarta.servlet.ServletException;
@@ -66,6 +68,22 @@ public class AddAppointmentServlet extends HttpServlet {
         if (error != null) {
             loadFormData(request);
             request.setAttribute("error", error);
+            request.getRequestDispatcher("/WEB-INF/views/appointment-form.jsp").forward(request, response);
+            return;
+        }
+
+        // working-hours guard: the time has to be a real slot for this dentist on
+        // this day. The dropdown only offers valid slots, but a stale form or a
+        // direct POST can still send anything, so it's checked again server-side.
+        Dentist bookedDentist = dentistDao.getDentistById(DentistValidator.toInt(dentistId));
+        String dayKey = SlotService.dayKey(date);
+        if (bookedDentist == null || dayKey == null
+                || !SlotService.isBookableSlot(time,
+                        bookedDentist.getStartTimes().get(dayKey),
+                        bookedDentist.getEndTimes().get(dayKey),
+                        bookedDentist.getSlotMinutes())) {
+            loadFormData(request);
+            request.setAttribute("error", "That time is outside the dentist's working hours for that day.");
             request.getRequestDispatcher("/WEB-INF/views/appointment-form.jsp").forward(request, response);
             return;
         }
