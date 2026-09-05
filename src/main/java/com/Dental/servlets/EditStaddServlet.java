@@ -107,8 +107,7 @@ public class EditStaddServlet extends HttpServlet {
                 EmailService.send(email, name, "Your Sunrise Dental Clinic password was reset",
                         "<p>Hi " + name + ",</p>"
                         + "<p>Your password was reset by an administrator.</p>"
-                        + "<p><b>New password:</b> " + password + "</p>"
-                        + "<p>Please sign in and change it when convenient.</p>");
+                        + "<p>Please contact them directly to get your new password.</p>");
             } else if (statusChanged) {
                 EmailService.send(email, name, "Your Sunrise Dental Clinic account status changed",
                         "<p>Hi " + name + ",</p>"

@@ -59,8 +59,8 @@ public class AddStaffServlet  extends HttpServlet{
             EmailService.send(email, name, "Welcome to Sunrise Dental Clinic",
                     "<p>Hi " + name + ",</p>"
                     + "<p>An account has been created for you on the Sunrise Dental Clinic staff system.</p>"
-                    + "<p><b>Email:</b> " + email + "<br><b>Password:</b> " + password + "</p>"
-                    + "<p>Please sign in and change your password when convenient.</p>");
+                    + "<p><b>Login email:</b> " + email + "</p>"
+                    + "<p>Please contact your administrator directly to get your password.</p>");
             response.sendRedirect(request.getContextPath() + "/staffs");
         } else {
             request.setAttribute("error", "Could not add staff. Please try again.");
