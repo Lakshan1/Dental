@@ -37,6 +37,21 @@
             </div>
           </c:if>
 
+          <%-- shown when someone tries to delete an appointment that has a bill on file --%>
+          <c:if test="${param.err == 'hasbill'}">
+            <div class="mb-4 px-4 py-3 rounded-lg bg-amber-50 border border-amber-100 text-sm text-amber-700">
+              This appointment has a bill on file and cannot be deleted. Mark it as
+              <strong>cancelled</strong> instead if it's no longer needed.
+            </div>
+          </c:if>
+
+          <%-- shown when a delete was attempted but failed for some other reason --%>
+          <c:if test="${param.err == 'deletefailed'}">
+            <div class="mb-4 px-4 py-3 rounded-lg bg-rose-50 border border-rose-100 text-sm text-rose-700">
+              Could not delete this appointment. Please try again.
+            </div>
+          </c:if>
+
           <%-- header row: appointment number + status + actions --%>
           <div class="flex items-center justify-between mb-6">
             <div>
