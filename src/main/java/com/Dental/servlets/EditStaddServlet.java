@@ -6,6 +6,7 @@ import org.mindrot.jbcrypt.BCrypt;
 
 import com.Dental.dao.StaffDao;
 import com.Dental.model.User;
+import com.Dental.notify.EmailService;
 import com.Dental.util.StaffValidator;
 
 import jakarta.servlet.ServletException;
@@ -88,14 +89,32 @@ public class EditStaddServlet extends HttpServlet {
         }
 
         // Keep the old hash if no new password was entered, else hash the new one.
-        String passwordHash = StaffValidator.isBlank(password)
-                ? existing.getPasswordHash()
-                : BCrypt.hashpw(password, BCrypt.gensalt());
+        boolean passwordReset = !StaffValidator.isBlank(password);
+        String passwordHash = passwordReset
+                ? BCrypt.hashpw(password, BCrypt.gensalt())
+                : existing.getPasswordHash();
+
+        boolean statusChanged = !existing.getStatus().equals(status);
 
         User updatedStaff = new User(staffId, name, email, passwordHash, role, status);
 
         // BUG FIX 3: check the update result instead of ignoring it.
         if (staffDao.updateStaff(updatedStaff)) {
+            // A reset password takes priority - if an admin reset the password on the
+            // same edit that also changed status, the new credentials are what the
+            // staff member actually needs to know.
+            if (passwordReset) {
+                EmailService.send(email, name, "Your Sunrise Dental Clinic password was reset",
+                        "<p>Hi " + name + ",</p>"
+                        + "<p>Your password was reset by an administrator.</p>"
+                        + "<p><b>New password:</b> " + password + "</p>"
+                        + "<p>Please sign in and change it when convenient.</p>");
+            } else if (statusChanged) {
+                EmailService.send(email, name, "Your Sunrise Dental Clinic account status changed",
+                        "<p>Hi " + name + ",</p>"
+                        + "<p>Your account status is now: <b>" + status + "</b>.</p>"
+                        + "<p>Contact an administrator if you have questions.</p>");
+            }
             response.sendRedirect(request.getContextPath() + "/staffs");
         } else {
             request.setAttribute("staff", existing);

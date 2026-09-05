@@ -5,6 +5,7 @@ import java.io.IOException;
 import com.Dental.dao.AppointmentDao;
 import com.Dental.dao.DentistDao;
 import com.Dental.model.Appointment;
+import com.Dental.notify.SmsService;
 import com.Dental.util.AppointmentValidator;
 import com.Dental.util.DentistValidator;
 
@@ -91,6 +92,14 @@ public class EditAppointmentServlet extends HttpServlet {
             return;
         }
 
+        // Captured before existing is mutated below, so this compares old vs new.
+        // Only a genuine reschedule (date, time or dentist) gets a "rescheduled"
+        // SMS - editing something else (e.g. marking completed) shouldn't say
+        // the appointment moved when it didn't.
+        boolean scheduleChanged = !existing.getAppointmentDate().equals(date)
+                || !existing.getAppointmentTime().equals(time)
+                || existing.getDentistId() != DentistValidator.toInt(dentistId);
+
         existing.setDentistId(DentistValidator.toInt(dentistId));
         existing.setTreatmentType(treatmentType);
         existing.setAppointmentDate(date);
@@ -98,6 +107,17 @@ public class EditAppointmentServlet extends HttpServlet {
         existing.setStatus(status);
 
         if (appointmentDao.updateAppointment(existing)) {
+            if (scheduleChanged) {
+                // Re-fetch for the joined details - picks up the NEW dentist's
+                // name if the dentist itself was changed.
+                Appointment updated = appointmentDao.getAppointmentById(id);
+                if (updated != null) {
+                    SmsService.send(updated.getPatientContact(),
+                            "Hi " + updated.getPatientName() + ", your appointment with Dr. "
+                            + updated.getDentistName() + " has been rescheduled to " + date + " at " + time
+                            + ". - Sunrise Dental Clinic");
+                }
+            }
             response.sendRedirect(request.getContextPath() + "/appointments/view?id=" + id);
         } else {
             request.setAttribute("appointment", appointmentDao.getAppointmentById(id));

@@ -30,6 +30,15 @@ services:
       DB_NAME: dental_db
       DB_USER: dental_app
       DB_PASSWORD: dental_app_pw
+      # Notification credentials: real values come from .env (gitignored, not
+      # committed). Blank here is fine - EmailService/SmsService just skip
+      # sending and log when these aren't set.
+      BREVO_API_KEY: ${BREVO_API_KEY:-}
+      BREVO_SENDER_EMAIL: ${BREVO_SENDER_EMAIL:-}
+      BREVO_SENDER_NAME: ${BREVO_SENDER_NAME:-}
+      NOTIFYLK_USER_ID: ${NOTIFYLK_USER_ID:-}
+      NOTIFYLK_API_KEY: ${NOTIFYLK_API_KEY:-}
+      NOTIFYLK_SENDER_ID: ${NOTIFYLK_SENDER_ID:-}
     ports:
       - "8080:8080"
 

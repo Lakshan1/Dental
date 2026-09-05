@@ -6,6 +6,7 @@ import com.Dental.dao.AppointmentDao;
 import com.Dental.dao.BillDao;
 import com.Dental.model.Appointment;
 import com.Dental.model.Bill;
+import com.Dental.notify.SmsService;
 import com.Dental.util.BillValidator;
 import com.Dental.util.DentistValidator;
 
@@ -79,6 +80,10 @@ public class GenerateBillServlet extends HttpServlet {
         }
 
         if (saved) {
+            SmsService.send(appointment.getPatientContact(),
+                    "Hi " + appointment.getPatientName() + ", your bill for the visit with Dr. "
+                    + appointment.getDentistName() + " is Rs. "
+                    + String.format("%.2f", bill.getTotalAmount()) + ". Thank you - Sunrise Dental Clinic");
             response.sendRedirect(request.getContextPath() + "/appointments/bill/view?id=" + appointment.getId());
         } else {
             request.setAttribute("appointment", appointment);

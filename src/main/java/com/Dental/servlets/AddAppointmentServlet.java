@@ -8,6 +8,7 @@ import com.Dental.dao.PatientDao;
 import com.Dental.model.Appointment;
 import com.Dental.model.Dentist;
 import com.Dental.model.Patient;
+import com.Dental.notify.SmsService;
 import com.Dental.util.AppointmentValidator;
 import com.Dental.util.DentistValidator;
 import com.Dental.util.SlotService;
@@ -131,7 +132,16 @@ public class AddAppointmentServlet extends HttpServlet {
         appt.setAppointmentTime(time);
         appt.setStatus(status);
 
-        if (appointmentDao.addAppointment(appt) > 0) {
+        int newAppointmentId = appointmentDao.addAppointment(appt);
+        if (newAppointmentId > 0) {
+            // Re-fetch by id for the joined patient/dentist details (phone, names)
+            // rather than duplicating those lookups here.
+            Appointment saved = appointmentDao.getAppointmentById(newAppointmentId);
+            if (saved != null) {
+                SmsService.send(saved.getPatientContact(),
+                        "Hi " + saved.getPatientName() + ", your appointment with Dr. " + saved.getDentistName()
+                        + " is confirmed for " + date + " at " + time + ". - Sunrise Dental Clinic");
+            }
             response.sendRedirect(request.getContextPath() + "/appointments");
         } else {
             loadFormData(request);

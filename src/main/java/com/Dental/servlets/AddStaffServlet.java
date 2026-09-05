@@ -6,6 +6,7 @@ import org.mindrot.jbcrypt.BCrypt;
 
 import com.Dental.dao.StaffDao;
 import com.Dental.model.User;
+import com.Dental.notify.EmailService;
 import com.Dental.util.StaffValidator;
 
 import jakarta.servlet.ServletException;
@@ -55,6 +56,11 @@ public class AddStaffServlet  extends HttpServlet{
         User user = new User(0, name, email, passwordHash, role, status);
 
         if (staffDao.addStaff(user)) {
+            EmailService.send(email, name, "Welcome to Sunrise Dental Clinic",
+                    "<p>Hi " + name + ",</p>"
+                    + "<p>An account has been created for you on the Sunrise Dental Clinic staff system.</p>"
+                    + "<p><b>Email:</b> " + email + "<br><b>Password:</b> " + password + "</p>"
+                    + "<p>Please sign in and change your password when convenient.</p>");
             response.sendRedirect(request.getContextPath() + "/staffs");
         } else {
             request.setAttribute("error", "Could not add staff. Please try again.");
